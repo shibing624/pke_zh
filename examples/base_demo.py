@@ -8,12 +8,11 @@ import sys
 
 sys.path.append("..")
 
-from labelit.label import LabelModel
-
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 
 if __name__ == '__main__':
-    file_path = os.path.join(pwd_path, "../extra_data/samples.txt")
+    q = '哪里下载电视剧潜伏'
+    import jieba.analyse
 
-    lm = LabelModel(input_file_path=file_path)
-    lm.label()
+    for x, w in jieba.analyse.textrank(q, withWeight=True, withFlag=True):
+        print('%s %s' % (x, w))

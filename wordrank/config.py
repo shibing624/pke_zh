@@ -9,14 +9,13 @@ pwd_path = os.path.abspath(os.path.dirname(__file__))
 
 input_file_path = os.path.join(pwd_path, "../extra_data/samples.txt")
 
-# segment_type optionals: "word, char"
-segment_type = 'word'
-# feature_type optionals: "tfidf, tf"
-feature_type = 'tfidf'
+sentence_delimiters = ['?', '!', ';', '？', '！', '。', '；',';', '……', '…', '\n']
+allow_speech_tags = ['an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'v', 'vd', 'vn', 'eng']
 
-seg_input_file_path = os.path.join(pwd_path, "../extra_data/samples_seg_{}.txt".format(segment_type))
+# stopwords
+stopwords_path = os.path.join(pwd_path, 'data/stopwords.txt')
+
 col_sep = '\t'  # separate label and content of train data
-num_classes = 6
 
 # active learning params
 output_dir = os.path.join(pwd_path, "../extra_data")  # where to save outputs
