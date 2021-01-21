@@ -1,0 +1,3 @@
+jieba
+scipy>=0.19
+pandas>=0.20
