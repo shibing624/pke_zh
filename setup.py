@@ -54,5 +54,5 @@ setup(
     packages=find_packages(exclude=['tests']),
     package_dir={'wordrank': 'wordrank'},
     package_data={'wordrank': ['*.*', '../LICENSE', '../README.*', '../*.txt', 'data/*',
-                               '../extra_data/*.*']}
+                               '../extra_data/*.*', ]}
 )

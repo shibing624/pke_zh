@@ -39,5 +39,4 @@ if __name__ == '__main__':
           args.ngram,
           args.pmi_path,
           args.entropy_path,
-          args.model_path,
-          )
+          args.model_path)
