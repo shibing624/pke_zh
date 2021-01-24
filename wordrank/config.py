@@ -27,8 +27,8 @@ common_char_path = os.path.join(pwd_path, 'data/common_char_set.txt')
 domain_sample_path = os.path.join(extra_data_dir, 'train.csv')
 pmi_path = os.path.join(extra_data_dir, 'pmi_word_score.json')
 entropy_path = os.path.join(extra_data_dir, 'entropy_word_score.json')
-word_vocab_path =os.path.join(extra_data_dir, 'word_vocab.txt')
-feature_vec_path = os.path.join(extra_data_dir, 'feature_vec.pkl')
+# word_vocab_path =os.path.join(extra_data_dir, 'word_vocab.txt')
+# feature_vec_path = os.path.join(extra_data_dir, 'feature_vec.pkl')
 ngram = 4
 
 model_path = os.path.join(extra_data_dir, 'classify_model.pkl')
