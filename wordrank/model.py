@@ -90,7 +90,7 @@ def train(train_file,
     X_train, X_val, y_train, y_val = train_test_split(features, tags, test_size=0.2, random_state=0)
     logger.debug("train size:%s, val size:%s" % (len(y_train), len(y_val)))
     # 3.train classification model, save model file
-    model = RandomForestClassifier(n_estimators=500)
+    model = RandomForestClassifier(n_estimators=300)
     # fit
     logger.debug("start train model ...")
     model.fit(X_train, y_train)

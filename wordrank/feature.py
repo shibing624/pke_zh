@@ -4,8 +4,6 @@
 @description: 
 """
 
-import numpy as np
-
 from wordrank import config
 from wordrank.features.language_feature import LanguageFeature
 from wordrank.features.statistics_feature import StatisticsFeature
@@ -30,7 +28,7 @@ class Feature(object):
         self.person_name_path = person_name_path
         self.place_name_path = place_name_path
         self.common_char_path = common_char_path
-        self.segment_sep=segment_sep
+        self.segment_sep = segment_sep
 
         self.domain_sample_path = domain_sample_path
         self.ngram = ngram
