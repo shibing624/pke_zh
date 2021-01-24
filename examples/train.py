@@ -26,6 +26,8 @@ if __name__ == '__main__':
     parser.add_argument('--pmi_path', type=str, default=config.pmi_path, help='pmi_path')
     parser.add_argument('--entropy_path', type=str, default=config.entropy_path, help='entropy_path')
     parser.add_argument('--model_path', type=str, default=config.model_path, help='model file path to save')
+    parser.add_argument('--word_vocab_path', type=str, default=config.word_vocab_path, help='word_vocab_path to save')
+    parser.add_argument('--feature_vec_path', type=str, default=config.feature_vec_path, help='feature_vec_path to save')
     args = parser.parse_args()
     print(args)
     train(args.train_file,
@@ -39,4 +41,7 @@ if __name__ == '__main__':
           args.ngram,
           args.pmi_path,
           args.entropy_path,
-          args.model_path)
+          args.model_path,
+          args.word_vocab_path,
+          args.feature_vec_path,
+          )
