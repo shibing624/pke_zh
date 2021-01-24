@@ -6,19 +6,28 @@
 import os
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
+# where to save custom files
+extra_data_dir = os.path.join(pwd_path, "../extra_data")
 
-input_file_path = os.path.join(pwd_path, "../extra_data/samples.txt")
+col_sep = ','  # separate label and content of train data
+segment_sep = ' '  # separate cut word
+train_file = os.path.join(extra_data_dir, "train.csv")
+test_file = os.path.join(extra_data_dir, "test.csv")
 
-sentence_delimiters = ['?', '!', ';', '？', '！', '。', '；',';', '……', '…', '\n']
+sentence_delimiters = ['？', '！', '。', '；', '……', '…']
 allow_speech_tags = ['an', 'i', 'j', 'l', 'n', 'nr', 'nrfg', 'ns', 'nt', 'nz', 't', 'v', 'vd', 'vn', 'eng']
 
-# stopwords
+# inner data file
 stopwords_path = os.path.join(pwd_path, 'data/stopwords.txt')
+person_name_path = os.path.join(pwd_path, 'data/person_name.txt')
+place_name_path = os.path.join(pwd_path, 'data/place_name.txt')
+common_char_path = os.path.join(pwd_path, 'data/common_char_set.txt')
 
-col_sep = '\t'  # separate label and content of train data
+domain_sample_path = os.path.join(extra_data_dir, 'tianlongbabu.txt')  # custom domain file for statistics
+pmi_path = os.path.join(extra_data_dir, 'pmi_word_score.json')
+entropy_path = os.path.join(extra_data_dir, 'entropy_word_score.json')
 
-# active learning params
-output_dir = os.path.join(pwd_path, "../extra_data")  # where to save outputs
+ngram = 4
 
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
+if not os.path.exists(extra_data_dir):
+    os.makedirs(extra_data_dir)

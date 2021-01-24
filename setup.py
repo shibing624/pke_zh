@@ -25,7 +25,7 @@ with open('requirements.txt', 'r', encoding='utf-8') as f:
 setup(
     name='wordrank',
     version=__version__,
-    description='query word rank, context-aware bag-of-words term weights for query and document.',
+    description='word rank, context-aware bag-of-words term weights for query and document.',
     long_description=readme,
     long_description_content_type='text/markdown',
     author='XuMing',

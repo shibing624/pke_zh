@@ -10,13 +10,13 @@ import jieba.posseg
 
 from wordrank import config
 
-
 class AttrDict(dict):
     """Dict that can get attribute by dot"""
 
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
+
 
 
 class WordSegmentation(object):
@@ -48,7 +48,7 @@ class WordSegmentation(object):
         """
         jieba_result = jieba.posseg.cut(text)
 
-        if use_speech_tags_filter == True:
+        if use_speech_tags_filter:
             jieba_result = [w for w in jieba_result if w.flag in self.default_speech_tag_filter]
         else:
             jieba_result = [w for w in jieba_result]
@@ -70,7 +70,6 @@ class WordSegmentation(object):
 
         sequences -- 列表，每个元素是一个句子（字符串类型）
         """
-
         res = []
         for sentence in sentences:
             res.append(self.segment(text=sentence,
@@ -103,7 +102,8 @@ class SentenceSegmentation(object):
 
 class Segmentation(object):
 
-    def __init__(self, stopwords_file=config.stopwords_path,
+    def __init__(self,
+                 stopwords_file=config.stopwords_path,
                  allow_speech_tags=config.allow_speech_tags,
                  delimiters=config.sentence_delimiters):
         """
@@ -116,10 +116,10 @@ class Segmentation(object):
 
     def segment(self, text, lower=False):
         sentences = self.ss.segment(text)
-        words_no_filter = self.ws.segment_sentences(sentences=sentences,
-                                                    lower=lower,
-                                                    use_stop_words_filter=False,
-                                                    use_speech_tags_filter=False)
+        words = self.ws.segment_sentences(sentences=sentences,
+                                          lower=lower,
+                                          use_stop_words_filter=False,
+                                          use_speech_tags_filter=False)
         words_no_stop_words = self.ws.segment_sentences(sentences=sentences,
                                                         lower=lower,
                                                         use_stop_words_filter=True,
@@ -132,7 +132,7 @@ class Segmentation(object):
 
         return AttrDict(
             sentences=sentences,
-            words_no_filter=words_no_filter,
+            words=words,
             words_no_stop_words=words_no_stop_words,
             words_all_filters=words_all_filters
         )
