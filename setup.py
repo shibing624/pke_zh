@@ -53,5 +53,6 @@ setup(
     install_requires=reqs.strip().split('\n'),
     packages=find_packages(exclude=['tests']),
     package_dir={'wordrank': 'wordrank'},
-    package_data={'wordrank': ['*.*', '../LICENSE', '../README.*', '../*.txt', 'data/*', ]}
+    package_data={'wordrank': ['*.*', '../LICENSE', '../README.*', '../*.txt', 'data/*',
+                               '../extra_data/*.*']}
 )

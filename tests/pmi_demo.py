@@ -30,10 +30,9 @@ if __name__ == '__main__':
                     ngram=4,
                     pmi_path=config.pmi_path,
                     entropy_path=config.entropy_path)
-    print(pmi_model.pmi_score('天龙'))
-    print(pmi_model.pmi_score('天龙八部'))
-    print(pmi_model.pmi_score('龙八部哪'))
+    print(pmi_model.pmi_score('大蒜'))
+    print(pmi_model.pmi_score('大蒜价格'))
 
     print(pmi_model.entropy_score('天龙'))
-    print(pmi_model.entropy_score('天龙八部'))
-    print(pmi_model.entropy_score('龙八部哪'))
+    print(pmi_model.entropy_score('大蒜'))
+    print(pmi_model.entropy_score('大蒜价格'))
