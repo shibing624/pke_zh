@@ -101,7 +101,7 @@ class PMI(object):
         if os.path.exists(pmi_path) and os.path.exists(entropy_path):
             self.pmi_score_dict = load_json(pmi_path)
             self.entropy_score_dict = load_json(entropy_path)
-        elif len(text) > 0:
+        elif len(text.strip()) > 0:
             words_freq = ngram_freq(text, ngram)
             self.pmi_score_dict = generate_pmi_score(words_freq, pmi_path)
             self.entropy_score_dict = generate_entropy_score(words_freq, text, entropy_path)

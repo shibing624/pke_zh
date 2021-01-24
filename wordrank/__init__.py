@@ -4,3 +4,7 @@
 @description: 
 """
 from . import config
+from .wordrank import WordRank
+
+WR = WordRank()
+rank = WR.rank

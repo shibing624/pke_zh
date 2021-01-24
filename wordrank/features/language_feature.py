@@ -11,7 +11,6 @@ from copy import deepcopy
 import pycorrector
 
 from wordrank.features.text_feature import AttrDict
-from wordrank.utils.logger import logger
 from wordrank.utils.tokenizer import word_segment
 
 
@@ -49,10 +48,9 @@ class LanguageFeature(object):
             word_seq = query.split(self.segment_sep)
         else:
             word_seq = word_segment(query, cut_type='word', pos=False)
-        logger.debug('%s' % word_seq)
 
         # sentence
-        sentence_features=AttrDict(
+        sentence_features = AttrDict(
             ppl=self.get_ppl_score(word_seq),
         )
 

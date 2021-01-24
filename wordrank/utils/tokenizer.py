@@ -61,7 +61,7 @@ def sentence_segment(text, delimiters=config.sentence_delimiters, include_symbol
             continue
         result.append((blk, start_idx))
         start_idx += len(blk)
-        if include_symbols:
+        if include_symbols and start_idx < len(text):
             result.append((text[start_idx], start_idx))
             start_idx += 1
     return result
@@ -78,4 +78,6 @@ if __name__ == '__main__':
     t = word_segment(text, pos=True)
     print(t)
     t = sentence_segment(text, include_symbols=True)
+    print(t)
+    t = sentence_segment('这个消息在北京城', include_symbols=True)
     print(t)

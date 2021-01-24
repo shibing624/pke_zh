@@ -23,11 +23,13 @@ person_name_path = os.path.join(pwd_path, 'data/person_name.txt')
 place_name_path = os.path.join(pwd_path, 'data/place_name.txt')
 common_char_path = os.path.join(pwd_path, 'data/common_char_set.txt')
 
-domain_sample_path = os.path.join(extra_data_dir, 'tianlongbabu.txt')  # custom domain file for statistics
+# custom domain file for statistics
+domain_sample_path = os.path.join(extra_data_dir, 'train.csv')
 pmi_path = os.path.join(extra_data_dir, 'pmi_word_score.json')
 entropy_path = os.path.join(extra_data_dir, 'entropy_word_score.json')
 
 ngram = 4
 
+model_path = os.path.join(extra_data_dir, 'classify_model.pkl')
 if not os.path.exists(extra_data_dir):
     os.makedirs(extra_data_dir)

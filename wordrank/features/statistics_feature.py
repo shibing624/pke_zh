@@ -12,7 +12,6 @@ from wordrank.features.pmi import PMI
 from wordrank.features.text_feature import AttrDict
 from wordrank.features.textrank import TextRank
 from wordrank.features.tfidf import TFIDF
-from wordrank.utils.logger import logger
 from wordrank.utils.tokenizer import word_segment
 
 
@@ -40,9 +39,13 @@ class StatisticsFeature(object):
         return score
 
     @staticmethod
-    def read_text(file_path, limit_len=10000):
+    def read_text(file_path, col_sep=config.col_sep, limit_len=100000):
+        text = ''
         with open(file_path, 'r', encoding='utf-8') as f:
-            text = f.read()
+            for line in f:
+                line = line.strip()
+                parts = line.split(col_sep)
+                text += parts[0]
         if limit_len > 0:
             result = text[:limit_len]
         else:
@@ -65,7 +68,6 @@ class StatisticsFeature(object):
             word_seq = query.split(self.segment_sep)
         else:
             word_seq = word_segment(query, cut_type='word', pos=False)
-        logger.debug('%s' % word_seq)
 
         count = 0
         for word in word_seq:
@@ -74,12 +76,14 @@ class StatisticsFeature(object):
             left_word = word_seq[count - 1] if count > 0 else ''
             right_word = word_seq[count + 1] if count < len(word_seq) - 1 else ''
             left_right_word = ''.join([left_word, right_word])
+            entropy_score = self.pmi_model.entropy_score(left_right_word)
             term_features.append(AttrDict(
                 idf=idf,
                 text_rank_score=self._get_tags_score(word, rank_tags),
                 tfidf_score=self._get_tags_score(word, tfidf_tags),
                 pmi_score=self.pmi_model.pmi_score(left_right_word),
-                entropy_score=self.pmi_model.entropy_score(left_right_word)
+                left_entropy_score=entropy_score[0],
+                right_entropy_score=entropy_score[1],
             ))
             count += 1
 
