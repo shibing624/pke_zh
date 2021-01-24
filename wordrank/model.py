@@ -15,6 +15,12 @@ from wordrank.utils.logger import logger
 
 
 def data_reader(file_path, col_sep='\t'):
+    """
+    Load data
+    :param file_path:
+    :param col_sep:
+    :return: list, list: contents, labels
+    """
     contents = []
     labels = []
     with open(file_path, 'r', encoding='utf-8') as f:
