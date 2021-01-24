@@ -136,7 +136,6 @@ def predict(query,
     logger.info("terms: %s" % terms)
     logger.info("predict label: %s" % label_pred)
     print("predict label: %s" % label_pred)
-
     return label_pred
 
 
