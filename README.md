@@ -7,7 +7,7 @@
 Calculate word rank(term weighting), context-aware bag-of-words term weights for documents and queries.
 
 
-**wordrank**基于特征工程的词重要度分析工具，扩展性强，可作为工业用的基准方法。
+**wordrank**基于特征工程的词重要度分析工具，扩展性强，可作为调研用的基准方法。
 
 
 ## 思路
