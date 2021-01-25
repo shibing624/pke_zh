@@ -9,12 +9,10 @@ sys.path.append('..')
 from wordrank.features.pmi import PMI
 from wordrank import config
 
-q = "天龙八部哪里看"
-
 if __name__ == '__main__':
     # read the data and preprocessing the data to a whole str
     stop_word = ['【', '】', ')', '(', '、', '，', '“', '”', '。', '\n', '《', '》', ' ', '-', '！', '？', '.', '\'', '[', ']',
-                 '：', '/', '.', '"', '\u3000', '’', '．', ',', '…', '?']
+                 '：', '/', '.', '"', '\u3000', '’', '．', ',', '…', '?',' ']
     text = ''
     count = 0
     with open(config.domain_sample_path) as f:
@@ -22,7 +20,7 @@ if __name__ == '__main__':
             count += 1
             if count > 300:
                 continue
-            text += line.strip()
+            text += line.strip().split(',')[0]
     for i in stop_word:
         text = text.replace(i, "")
 

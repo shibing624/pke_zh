@@ -51,6 +51,8 @@ class WordRank(Feature):
 
     def rank_query(self, query):
         self.check_inited()
+        if len(query) == 1:
+            return zip([query], [0])
         # get feature
         data_feature, terms = self.get_feature(query, is_word_segmented=False)
         # predict model
