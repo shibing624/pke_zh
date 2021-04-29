@@ -41,13 +41,10 @@ class WordRank(Feature):
         self.model_path = model_path
         self.inited = False
 
-    def _init(self):
-        self.model = load_pkl(self.model_path)
-        self.inited = True
-
     def check_inited(self):
         if not self.inited:
-            self._init()
+            self.model = load_pkl(self.model_path)
+            self.inited = True
 
     def rank_query(self, query):
         self.check_inited()

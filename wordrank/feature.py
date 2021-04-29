@@ -35,6 +35,8 @@ class Feature(object):
         self.pmi_path = pmi_path
         self.entropy_path = entropy_path
         self.sentence_delimiters = sentence_delimiters
+        self.text_feature = None
+        self.statistics_feature = None
         self.feature_inited = False
 
     def _init_feature(self):

@@ -13,7 +13,7 @@ import codecs
 from copy import deepcopy
 
 import numpy as np
-from text2vec import Vector, Similarity
+from text2vec import Similarity
 from text2vec.similarity import SimType
 
 from wordrank import config
@@ -43,7 +43,6 @@ class TextFeature(object):
         self.place_names = self.load_set_file(place_name_path)
         self.common_chars = self.load_set_file(common_char_path)
         self.segment_sep = segment_sep
-        self.vec = Vector()
         self.sim = Similarity(similarity_type=SimType.WMD)
 
     @staticmethod
@@ -98,7 +97,7 @@ class TextFeature(object):
         idx = 0
         offset = 0
         for word in word_seq:
-            emb = self.vec.encode(word)
+            emb = self.sim.encode(word)
             word_list = deepcopy(word_seq)
             if word in word_list:
                 word_list.remove(word)
