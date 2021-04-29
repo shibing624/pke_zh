@@ -56,14 +56,13 @@ python3 setup.py install
 
 * [text2vec](https://github.com/shibing624/text2vec)
 * [pycorrector](https://github.com/shibing624/pycorrector)
-* jieba
 * scikit-learn
 * gensim
 
 ### 依赖数据
 
-* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe）
-* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)
+* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe），下载后的文件111MB需要手动放到 ~/.text2vec/datasets/light_Tencent_AILab_ChineseEmbedding.bin
+* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，文件自动下载，下载后的文件位于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm
 
 ## 使用示例
 ```
