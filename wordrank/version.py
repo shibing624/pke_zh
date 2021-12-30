@@ -1,3 +1,6 @@
 # -*- coding: utf-8 -*-
-
-__version__ = '0.1.2'
+"""
+@author:XuMing(xuming624@qq.com)
+@description: version
+"""
+__version__ = '0.1.3'

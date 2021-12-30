@@ -1,31 +1,43 @@
-[![PyPI version](https://badge.fury.io/py/wordrank.svg)](https://badge.fury.io/py/wordrank)
-[![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/shibing624/pysenti/LICENSE)
-![Language](https://img.shields.io/badge/Language-Python-blue.svg)
-
-
 # wordrank
-Calculate word rank(term weighting), context-aware bag-of-words term weights for documents and queries.
+[![PyPI version](https://badge.fury.io/py/wordrank.svg)](https://badge.fury.io/py/wordrank)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![GitHub contributors](https://img.shields.io/github/contributors/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/graphs/contributors)
+[![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![python_vesion](https://img.shields.io/badge/Python-3.5%2B-green.svg)](requirements.txt)
+[![GitHub issues](https://img.shields.io/github/issues/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/issues)
+[![Wechat Group](http://vlog.sfyc.ltd/wechat_everyday/wxgroup_logo.png?imageView2/0/w/60/h/20)](#Contact)
+
+Word Rank(term weighting), calculate context-aware bag-of-words term weights for documents and queries.
+
+**wordrank**基于特征工程的词重要度分析工具，支持词权重打分、词干提取等query分析，扩展性强，开箱即用。
 
 
-**wordrank**基于特征工程的词重要度分析工具，扩展性强，可作为词权重打分、词干提取等调研用的基准方法。
+**Guide**
 
+- [Feature](#Feature)
+- [Install](#install)
+- [Usage](#usage)
+- [Dataset](#Dataset)
+- [Contact](#Contact)
+- [Cite](#Cite)
+- [Reference](#reference)
 
+# Feature
+
+如何计算query中各word的权重呢？
 ## 思路
-
-如何计算各word在Query中的动态权重呢？
-
 ### 特征工程的解决思路
-1. 实现时采用模型打分方法，以搜索Query为原始语料，人工标注句子中各词重要度
+1. 实现时采用模型打分方法，以搜索query为原始语料，人工标注句子中各词重要度
 
 > 重要度共分4级：
-* Super important：主要包括POI核心词，比如“方特、欢乐谷”
-* Required：包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
-* Important：包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
-* Unimportant：包括线路游、泛需求词、停用词等
+> * Super important：3分，主要包括POI核心词，比如“方特、欢乐谷”
+> * Required：2分，包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
+> * Important：1分，包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
+> * Unimportant：0分，包括语气词、代词、泛需求词、停用词等
 
 上例中可见“温泉”在不同的Query中重要度是不同的。
 
-2. 模型方面采用树模型（XGBoost等）进行训练，离线生成模型后供线上使用
+2. 模型方面采用树模型（XGBoost等）进行训练，得到权重分类模型后在线上预测
 ![term-weighting](./docs/gbdt.png)
 
 ### 深度模型的解决思路
@@ -44,8 +56,11 @@ Calculate word rank(term weighting), context-aware bag-of-words term weights for
 * BERT CLS + classification
 * Seq2Seq + Attention
 
-## 安装
-* 全自动安装：pip3 install wordrank
+# Install
+* 全自动安装：
+```shell
+pip3 install wordrank
+```
 * 半自动安装：
 ```shell
 git clone https://github.com/shibing624/wordrank.git
@@ -53,26 +68,13 @@ cd wordrank
 python3 setup.py install
 ```
 
-### 依赖库
 
-```shell
-pip3 install -r requirements.txt
-```
-主要包括以下Python包：
-* scikit-learn
-* jieba
-* nlpcommon
+# Usage
 
-### 依赖数据
-
-* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe），下载后的文件111MB需要手动放到 ~/.text2vec/datasets/light_Tencent_AILab_ChineseEmbedding.bin
-* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，文件自动下载，下载后的文件位于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm
-
-## 使用示例
 ```python
 import wordrank
 
-q = '哪里下载电视剧周恩来'
+q = '哪里下载电视剧《周恩来》？'
 r = wordrank.rank(q)
 print(r)
 ```
@@ -156,8 +158,49 @@ from wordrank import WordRank
 model = WordRank(model_path='/your/model/path')
 model.check_inited()
 ```
+# Dataset
 
-## Reference
+* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe），下载后的文件111MB需要手动放到 ~/.word2vec/datasets/light_Tencent_AILab_ChineseEmbedding.bin
+* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，文件自动下载，下载后的文件位于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm
+
+
+# Contact
+
+- Issue(建议)：[![GitHub issues](https://img.shields.io/github/issues/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/issues)
+- 邮件我：xuming: xuming624@qq.com
+- 微信我：加我*微信号：xuming624*, 进Python-NLP交流群，备注：*姓名-公司名-NLP*
+<img src="http://42.193.145.218/github_data/xm_wechat_erweima.png" width="200" />
+
+
+# Cite
+
+如果你在研究中使用了wordrank，请按如下格式引用：
+
+```latex
+@software{wordrank,
+  author = {Xu Ming},
+  title = {wordrank: A Tool for query term weighting},
+  year = {2021},
+  url = {https://github.com/shibing624/wordrank},
+}
+```
+
+# License
+
+
+授权协议为 [The Apache License 2.0](LICENSE)，可免费用做商业用途。请在产品说明中附加wordrank的链接和授权协议。
+
+
+# Contribute
+项目代码还很粗糙，如果大家对代码有所改进，欢迎提交回本项目，在提交之前，注意以下两点：
+
+ - 在`tests`添加相应的单元测试
+ - 使用`python setup.py test`来运行所有单元测试，确保所有单测都是通过的
+
+之后即可提交PR。
+
+
+# Reference
 
 - [Context-Aware Document Term Weighting for Ad-Hoc Search](http://www.cs.cmu.edu/~zhuyund/papers/TheWebConf_2020_Dai.pdf)
 - [term weighting](https://zhuanlan.zhihu.com/p/90957854)
