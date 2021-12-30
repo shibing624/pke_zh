@@ -4,7 +4,7 @@
 @description: 
 """
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble._forest import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
@@ -139,7 +139,7 @@ def predict(query,
     model = load_pkl(model_path)
     logger.debug("model predict")
     label_pred = model.predict(features)
-    logger.info("terms: %s" % terms)
+    logger.info("words: %s" % terms)
     logger.info("predict label: %s" % label_pred)
     print("predict label: %s" % label_pred)
     return label_pred

@@ -19,7 +19,7 @@ class WordRank(Feature):
                  person_name_path=config.person_name_path,
                  place_name_path=config.place_name_path,
                  common_char_path=config.common_char_path,
-                 segment_sep = config.segment_sep,
+                 segment_sep=config.segment_sep,
                  domain_sample_path=config.domain_sample_path,
                  ngram=config.ngram,
                  pmi_path=config.pmi_path,
@@ -31,7 +31,7 @@ class WordRank(Feature):
             person_name_path=person_name_path,
             place_name_path=place_name_path,
             common_char_path=common_char_path,
-            segment_sep = segment_sep,
+            segment_sep=segment_sep,
             domain_sample_path=domain_sample_path,
             ngram=ngram,
             pmi_path=pmi_path,
@@ -44,6 +44,7 @@ class WordRank(Feature):
     def check_inited(self):
         if not self.inited:
             self.model = load_pkl(self.model_path)
+            logger.debug('Loaded model: {}'.format(self.model_path))
             self.inited = True
 
     def rank_query(self, query):
@@ -54,7 +55,7 @@ class WordRank(Feature):
         data_feature, terms = self.get_feature(query, is_word_segmented=False)
         # predict model
         label_pred = self.model.predict(data_feature)
-        logger.debug("predict label: %s" % label_pred)
+        # logger.debug("predict label: %s" % label_pred)
         return zip(terms, label_pred)
 
     def rank(self, text):

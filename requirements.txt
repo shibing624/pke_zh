@@ -1,4 +1,5 @@
-scikit-learn
+text2vec
+pycorrector
 numpy
 jieba
-nlpcommon
+scikit-learn

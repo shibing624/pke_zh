@@ -14,7 +14,7 @@ from copy import deepcopy
 
 import numpy as np
 from text2vec import Similarity
-from text2vec.similarity import SimType
+from text2vec.similarity import SimType, EmbType
 
 from wordrank import config
 from wordrank.utils.logger import logger
@@ -43,7 +43,8 @@ class TextFeature(object):
         self.place_names = self.load_set_file(place_name_path)
         self.common_chars = self.load_set_file(common_char_path)
         self.segment_sep = segment_sep
-        self.sim = Similarity(similarity_type=SimType.WMD)
+        self.sim = Similarity(similarity_type=SimType.WMD, embedding_type=EmbType.W2V)
+        self.sim.load_model()
 
     @staticmethod
     def load_set_file(path):
@@ -97,7 +98,7 @@ class TextFeature(object):
         idx = 0
         offset = 0
         for word in word_seq:
-            emb = self.sim.encode(word)
+            emb = self.sim.model.encode(word)
             word_list = deepcopy(word_seq)
             if word in word_list:
                 word_list.remove(word)

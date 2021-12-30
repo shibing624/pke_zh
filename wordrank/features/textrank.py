@@ -1,7 +1,8 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-from __future__ import absolute_import, unicode_literals
+"""
+@author:XuMing(xuming624@qq.com)
+@description:
+"""
 
 import sys
 from collections import defaultdict

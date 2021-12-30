@@ -17,7 +17,6 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 - [Feature](#Feature)
 - [Install](#install)
 - [Usage](#usage)
-- [Dataset](#Dataset)
 - [Contact](#Contact)
 - [Cite](#Cite)
 - [Reference](#reference)
@@ -30,12 +29,12 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 1. 实现时采用模型打分方法，以搜索query为原始语料，人工标注句子中各词重要度
 
 > 重要度共分4级：
-> * Super important：3分，主要包括POI核心词，比如“方特、欢乐谷”
-> * Required：2分，包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
-> * Important：1分，包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
-> * Unimportant：0分，包括语气词、代词、泛需求词、停用词等
+> * Super important：主要包括POI核心词，比如“方特、欢乐谷”
+> * Required：包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
+> * Important：包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
+> * Unimportant：包括语气词、代词、泛需求词、停用词等
 
-上例中可见“温泉”在不同的Query中重要度是不同的。
+上例中可见“温泉”在不同的query中重要度是不同的。
 
 2. 模型方面采用树模型（XGBoost等）进行训练，得到权重分类模型后在线上预测
 ![term-weighting](./docs/gbdt.png)
@@ -69,21 +68,35 @@ python3 setup.py install
 ```
 
 
+### 依赖库
+
+```shell
+pip3 install text2vec pycorrector
+```
+主要包括以下Python包：
+* [text2vec](https://github.com/shibing624/text2vec)
+* [pycorrector](https://github.com/shibing624/pycorrector)
+
+### 依赖数据
+
+* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe），下载后的文件111MB需要手动放到 ~/.text2vec/datasets/light_Tencent_AILab_ChineseEmbedding.bin
+* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，文件自动下载，下载后的文件位于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm
+
 # Usage
 
 ```python
 import wordrank
 
-q = '哪里下载电视剧《周恩来》？'
+q = '哪里下载电视剧周恩来？'
 r = wordrank.rank(q)
 print(r)
 ```
 
 output:
+```shell
+[('哪里', '1'), ('下载', '3'), ('电视剧', '3'), ('周恩来', '1'), ('？', 0)]
 ```
-[('哪里', '1'), ('下载', '2'), ('电视剧', '3'), ('周恩来', '2')]
-```
-> 4：核心词；3：限定词；2：可省略词；1：干扰词。
+> 3：核心词；2：限定词；1：可省略词；0：干扰词。
 
 
 ### 命令行
@@ -158,10 +171,6 @@ from wordrank import WordRank
 model = WordRank(model_path='/your/model/path')
 model.check_inited()
 ```
-# Dataset
-
-* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe），下载后的文件111MB需要手动放到 ~/.word2vec/datasets/light_Tencent_AILab_ChineseEmbedding.bin
-* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，文件自动下载，下载后的文件位于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm
 
 
 # Contact
