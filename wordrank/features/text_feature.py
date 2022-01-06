@@ -13,8 +13,7 @@ import codecs
 from copy import deepcopy
 
 import numpy as np
-from text2vec import Similarity
-from text2vec.similarity import SimType, EmbType
+from text2vec import Similarity, SimType, EmbType
 
 from wordrank import config
 from wordrank.utils.logger import logger
@@ -43,7 +42,7 @@ class TextFeature(object):
         self.place_names = self.load_set_file(place_name_path)
         self.common_chars = self.load_set_file(common_char_path)
         self.segment_sep = segment_sep
-        self.sim = Similarity(similarity_type=SimType.WMD, embedding_type=EmbType.W2V)
+        self.sim = Similarity(similarity_type=SimType.COSINE, embedding_type=EmbType.SBERT)
         self.sim.load_model()
 
     @staticmethod
@@ -86,7 +85,7 @@ class TextFeature(object):
             word_seq = query.split(self.segment_sep)
         else:
             word_seq = word_segment(query, cut_type='word', pos=False)
-        logger.debug('%s' % word_seq)
+        # logger.debug('%s' % word_seq)
 
         # sentence
         sentence_features = AttrDict(

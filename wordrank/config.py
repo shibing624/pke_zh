@@ -8,6 +8,8 @@ import os
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 # where to save custom files
 extra_data_dir = os.path.join(pwd_path, "../extra_data")
+if not os.path.exists(extra_data_dir):
+    os.makedirs(extra_data_dir)
 
 col_sep = ','  # separate label and content of train data
 segment_sep = ' '  # separate cut word
@@ -27,11 +29,5 @@ common_char_path = os.path.join(pwd_path, 'data/common_char_set.txt')
 domain_sample_path = os.path.join(extra_data_dir, 'train.csv')
 pmi_path = os.path.join(extra_data_dir, 'pmi_word_score.json')
 entropy_path = os.path.join(extra_data_dir, 'entropy_word_score.json')
-# word_vocab_path =os.path.join(extra_data_dir, 'word_vocab.txt')
-# feature_vec_path = os.path.join(extra_data_dir, 'feature_vec.pkl')
-
 ngram = 4
-
 model_path = os.path.join(extra_data_dir, 'classify_model.pkl')
-if not os.path.exists(extra_data_dir):
-    os.makedirs(extra_data_dir)

@@ -58,7 +58,7 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 # Install
 * 全自动安装：
 ```shell
-pip3 install wordrank
+pip3 install -U wordrank
 ```
 * 半自动安装：
 ```shell
@@ -79,8 +79,8 @@ pip3 install text2vec pycorrector
 
 ### 依赖数据
 
-* 腾讯开源中文词向量[词向量数据（800万中文词轻量版）](https://pan.baidu.com/s/1La4U4XNFe8s5BJqxPQpeiQ) (文件名：light_Tencent_AILab_ChineseEmbedding.bin 密码: tawe），下载后的文件111MB需要手动放到 ~/.text2vec/datasets/light_Tencent_AILab_ChineseEmbedding.bin
-* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，文件自动下载，下载后的文件位于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm
+* SentenceBERT模型[sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2) ，模型由transformers库自动下载于：~/.cache/huggingface/transformers/ 下。
+* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，模型由pycorrector库自动下载于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm 。
 
 # Usage
 

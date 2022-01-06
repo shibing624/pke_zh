@@ -1,4 +1,4 @@
-text2vec
+text2vec>=1.0.1
 pycorrector
 numpy
 jieba

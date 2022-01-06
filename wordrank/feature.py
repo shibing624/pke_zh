@@ -84,7 +84,7 @@ class Feature(object):
         # sentence feature
         text_sent.update(stat_sent)
         text_sent.update(lang_sent)
-        logger.debug('sentence features: %s' % text_sent)
+        # logger.debug('sentence features: %s' % text_sent)
         sent_feature = [text_sent.query_length, text_sent.term_size, text_sent.ppl]
         # term feature
         for text, stat, lang in zip(text_terms, stat_terms, lang_terms):
@@ -100,6 +100,6 @@ class Feature(object):
             feature = sent_feature + term_feature
             features.append(feature)
             terms.append(text.term)
-        logger.debug("[query]feature size: %s, term size: %s" % (len(features), len(terms)))
+        # logger.debug("[query]feature size: %s, term size: %s" % (len(features), len(terms)))
 
         return features, terms

@@ -3,4 +3,4 @@
 @author:XuMing(xuming624@qq.com)
 @description: version
 """
-__version__ = '0.1.3'
+__version__ = '0.1.4'
