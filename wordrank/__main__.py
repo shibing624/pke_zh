@@ -12,7 +12,7 @@ from wordrank.model import train
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--train', action="store_true", default=False, help='train or predict')
+    parser.add_argument('--train', action="store_true", default=False, help='do train or not')
     parser.add_argument('--train_file', type=str, default=config.train_file, help='train file, file encode utf-8.')
     parser.add_argument('--col_sep', type=str, default=config.col_sep, help='column sep')
     parser.add_argument('--segment_sep', type=str, default=config.segment_sep, help='segment_sep')
@@ -41,15 +41,14 @@ if __name__ == '__main__':
               args.pmi_path,
               args.entropy_path,
               args.model_path)
-    else:
-        predict(args.query,
-                args.model_path,
-                args.stopwords_path,
-                args.person_name_path,
-                args.place_name_path,
-                args.common_char_path,
-                args.segment_sep,
-                args.domain_sample_path,
-                args.ngram,
-                args.pmi_path,
-                args.entropy_path)
+    predict(args.query,
+            args.model_path,
+            args.stopwords_path,
+            args.person_name_path,
+            args.place_name_path,
+            args.common_char_path,
+            args.segment_sep,
+            args.domain_sample_path,
+            args.ngram,
+            args.pmi_path,
+            args.entropy_path)
