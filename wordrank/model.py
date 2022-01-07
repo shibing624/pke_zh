@@ -83,7 +83,7 @@ def train(train_file,
     features = []
     tags = []
     for content, label in zip(contents, labels):
-        label_split = label.split(segment_sep)
+        label_split = [int(i) for i in label.split(segment_sep)]
         content_split = content.split(segment_sep)
         if len(label_split) != len(content_split):
             logger.warning('pass, content size not equal label size, %s %s' % (content, label))

@@ -7,7 +7,7 @@ import sys
 
 sys.path.append("..")
 import wordrank
-from wordrank.utils.logger import set_log_level
+from wordrank import set_log_level
 set_log_level("INFO")
 
 if __name__ == '__main__':
