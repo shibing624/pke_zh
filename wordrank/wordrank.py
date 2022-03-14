@@ -13,19 +13,20 @@ from wordrank.utils.text_utils import convert_to_unicode
 
 
 class WordRank(Feature):
-    def __init__(self,
-                 model_path=config.model_path,
-                 stopwords_path=config.stopwords_path,
-                 person_name_path=config.person_name_path,
-                 place_name_path=config.place_name_path,
-                 common_char_path=config.common_char_path,
-                 segment_sep=config.segment_sep,
-                 domain_sample_path=config.domain_sample_path,
-                 ngram=config.ngram,
-                 pmi_path=config.pmi_path,
-                 entropy_path=config.entropy_path,
-                 sentence_delimiters=config.sentence_delimiters,
-                 ):
+    def __init__(
+            self,
+            model_path=config.model_path,
+            stopwords_path=config.stopwords_path,
+            person_name_path=config.person_name_path,
+            place_name_path=config.place_name_path,
+            common_char_path=config.common_char_path,
+            segment_sep=config.segment_sep,
+            domain_sample_path=config.domain_sample_path,
+            ngram=config.ngram,
+            pmi_path=config.pmi_path,
+            entropy_path=config.entropy_path,
+            sentence_delimiters=config.sentence_delimiters,
+    ):
         super(WordRank, self).__init__(
             stopwords_path=stopwords_path,
             person_name_path=person_name_path,
