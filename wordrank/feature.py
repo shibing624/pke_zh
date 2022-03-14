@@ -94,7 +94,8 @@ class Feature(object):
             term_feature = [text.term_length, text.idx, text.offset,
                             float(text.is_number), float(text.is_chinese), float(text.is_alphabet),
                             float(text.is_stopword), float(text.is_name), float(text.is_common_char),
-                            float(text.embedding_sum), text.del_term_score, text.idf,
+                            # float(text.embedding_sum), text.del_term_score,
+                            text.idf,
                             text.text_rank_score, text.tfidf_score, text.pmi_score,
                             text.left_entropy_score, text.right_entropy_score, text.del_term_ppl,
                             text.term_ngram_score, text.left_term_score, text.right_term_score]

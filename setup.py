@@ -16,12 +16,6 @@ if sys.version_info < (3,):
 with open('README.md', 'r', encoding='utf-8') as f:
     readme = f.read()
 
-with open('LICENSE', 'r', encoding='utf-8') as f:
-    license = f.read()
-
-with open('requirements.txt', 'r', encoding='utf-8') as f:
-    reqs = f.read()
-
 setup(
     name='wordrank',
     version=__version__,
@@ -51,7 +45,11 @@ setup(
     ],
     platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
     keywords='wordrank,term weighting,textrank,word rank,wordweight',
-    install_requires=reqs.strip().split('\n'),
+    install_requires=[
+        "text2vec",
+        "pycorrector",
+        "scikit-learn",
+    ],
     packages=find_packages(exclude=['tests']),
     package_dir={'wordrank': 'wordrank'},
     package_data={'wordrank': ['*.*', '../LICENSE', '../README.*', '../*.txt', 'data/*',

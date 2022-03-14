@@ -52,19 +52,20 @@ def tfidf_word_feature(data_set, is_infer=False, feature_vec_path='', word_vocab
     return data_feature
 
 
-def train(train_file,
-          col_sep,
-          stopwords_path,
-          person_name_path,
-          place_name_path,
-          common_char_path,
-          segment_sep,
-          domain_sample_path,
-          ngram,
-          pmi_path,
-          entropy_path,
-          model_path,
-          ):
+def train(
+        train_file,
+        col_sep,
+        stopwords_path,
+        person_name_path,
+        place_name_path,
+        common_char_path,
+        segment_sep,
+        domain_sample_path,
+        ngram,
+        pmi_path,
+        entropy_path,
+        model_path,
+):
     # 1.read train data
     contents, labels = data_reader(train_file, col_sep)
     logger.info('contents size:%s, labels size:%s' % (len(contents), len(labels)))
@@ -110,18 +111,19 @@ def train(train_file,
     return model
 
 
-def predict(query,
-            model_path,
-            stopwords_path,
-            person_name_path,
-            place_name_path,
-            common_char_path,
-            segment_sep,
-            domain_sample_path,
-            ngram,
-            pmi_path,
-            entropy_path,
-            ):
+def predict(
+        query,
+        model_path,
+        stopwords_path,
+        person_name_path,
+        place_name_path,
+        common_char_path,
+        segment_sep,
+        domain_sample_path,
+        ngram,
+        pmi_path,
+        entropy_path,
+):
     logger.info('model predict')
     # get feature
     feat = Feature(stopwords_path=stopwords_path,
@@ -141,7 +143,6 @@ def predict(query,
     label_pred = model.predict(features)
     logger.info("words: %s" % terms)
     logger.info("predict label: %s" % label_pred)
-    print("predict label: %s" % label_pred)
     return label_pred
 
 

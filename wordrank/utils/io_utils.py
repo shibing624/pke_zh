@@ -88,7 +88,6 @@ def load_vocab(filename):
             for idx, word in enumerate(f):
                 word = word.strip()
                 d[word] = idx
-
     except IOError:
         raise IOError(filename)
     return d

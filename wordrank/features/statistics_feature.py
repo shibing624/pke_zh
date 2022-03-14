@@ -10,9 +10,10 @@
 from wordrank import config
 from wordrank.features.pmi import PMI
 from wordrank.features.text_feature import AttrDict
-from wordrank.features.textrank import TextRank
-from wordrank.features.tfidf import TFIDF
+from wordrank.features.textrank import TextRank4Keyword
+from wordrank.features.tfidf import TFIDF4Keyword
 from wordrank.utils.tokenizer import word_segment
+from wordrank.features.tfidf import load_stopwords
 
 
 class StatisticsFeature(object):
@@ -21,15 +22,19 @@ class StatisticsFeature(object):
                  ngram=4,
                  pmi_path=config.pmi_path,
                  entropy_path=config.entropy_path,
-                 segment_sep=config.segment_sep
+                 segment_sep=config.segment_sep,
+                 stopwords_path=config.stopwords_path,
                  ):
-        self.tfidf = TFIDF()
-        self.text_rank = TextRank()
+        stopwords = load_stopwords(stopwords_path)
+        self.tfidf = TFIDF4Keyword(stopwords=stopwords)
+        self.text_rank = TextRank4Keyword(stopwords=stopwords)
         self.segment_sep = segment_sep
-        self.pmi_model = PMI(text=self.read_text(domain_sample_path),
-                             ngram=ngram,
-                             pmi_path=pmi_path,
-                             entropy_path=entropy_path)
+        self.pmi_model = PMI(
+            text=self.read_text(domain_sample_path),
+            ngram=ngram,
+            pmi_path=pmi_path,
+            entropy_path=entropy_path
+        )
 
     def _get_tags_score(self, word, tags):
         score = 0.0

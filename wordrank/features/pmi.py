@@ -92,12 +92,13 @@ def generate_entropy_score(word_freq_dict, text, entropy_path):
 
 
 class PMI(object):
-    def __init__(self,
-                 text='',
-                 ngram=4,
-                 pmi_path=config.pmi_path,
-                 entropy_path=config.entropy_path
-                 ):
+    def __init__(
+            self,
+            text='',
+            ngram=4,
+            pmi_path=config.pmi_path,
+            entropy_path=config.entropy_path
+    ):
         if os.path.exists(pmi_path) and os.path.exists(entropy_path):
             self.pmi_score_dict = load_json(pmi_path)
             self.entropy_score_dict = load_json(entropy_path)

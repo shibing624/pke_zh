@@ -26,15 +26,17 @@ if __name__ == '__main__':
     parser.add_argument('--query', type=str, default='井冈山景点介绍', help='input query')
     args = parser.parse_args()
     print(args)
-    predict(args.query,
-            args.model_path,
-            args.stopwords_path,
-            args.person_name_path,
-            args.place_name_path,
-            args.common_char_path,
-            args.segment_sep,
-            args.domain_sample_path,
-            args.ngram,
-            args.pmi_path,
-            args.entropy_path
-            )
+    pred_result = predict(
+        args.query,
+        args.model_path,
+        args.stopwords_path,
+        args.person_name_path,
+        args.place_name_path,
+        args.common_char_path,
+        args.segment_sep,
+        args.domain_sample_path,
+        args.ngram,
+        args.pmi_path,
+        args.entropy_path
+    )
+    print("predict label: %s" % pred_result)

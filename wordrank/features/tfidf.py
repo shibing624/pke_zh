@@ -7,29 +7,23 @@
 import os
 import jieba
 import jieba.posseg
-from operator import itemgetter
 
 from jieba.analyse.tfidf import DEFAULT_IDF, _get_abs_path
+from operator import itemgetter
 
 
-class KeywordExtractor(object):
 
-    STOP_WORDS = set()
-
-    def set_stop_words(self, stop_words_path):
-        abs_path = _get_abs_path(stop_words_path)
-        if not os.path.isfile(abs_path):
-            raise Exception("jieba: file does not exist: " + abs_path)
-        content = open(abs_path, 'rb').read().decode('utf-8')
-        for line in content.splitlines():
-            self.stop_words.add(line)
-
-    def extract_tags(self, *args, **kwargs):
-        raise NotImplementedError
+def load_stopwords(file_path):
+    stopwords = set()
+    if file_path and os.path.exists(file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                stopwords.add(line)
+    return stopwords
 
 
-class IDFLoader(object):
-
+class IDFLoader:
     def __init__(self, idf_path=None):
         self.path = ""
         self.idf_freq = {}
@@ -52,21 +46,30 @@ class IDFLoader(object):
         return self.idf_freq, self.median_idf
 
 
-class TFIDF(KeywordExtractor):
-
-    def __init__(self, idf_path=None):
+class TFIDF4Keyword:
+    def __init__(self, idf_path=None, stopwords=None):
         self.tokenizer = jieba.dt
         self.postokenizer = jieba.posseg.dt
-        self.stop_words = self.STOP_WORDS.copy()
+        self.stopwords = stopwords if stopwords else []
         self.idf_loader = IDFLoader(idf_path or DEFAULT_IDF)
         self.idf_freq, self.median_idf = self.idf_loader.get_idf()
 
     def set_idf_path(self, idf_path):
         new_abs_path = _get_abs_path(idf_path)
         if not os.path.isfile(new_abs_path):
-            raise Exception("jieba: file does not exist: " + new_abs_path)
+            raise Exception("IDF file does not exist: " + new_abs_path)
         self.idf_loader.set_new_path(new_abs_path)
         self.idf_freq, self.median_idf = self.idf_loader.get_idf()
+
+    def get_tfidf(self, sentence):
+        words = [word.word for word in jieba.posseg.cut(sentence) if word.flag[0] not in ['u', 'x', 'w']]
+        words = [word for word in words if word.lower() not in self.stopwords or len(word.strip()) < 2]
+        word_idf = {word: self.idf_freq.get(word, self.median_idf) for word in words}
+
+        res = []
+        for w in list(self.idf_freq.keys()):
+            res.append(word_idf.get(w, 0))
+        return res
 
     def extract_tags(self, sentence, topK=20, withWeight=False, allowPOS=(), withFlag=False):
         """
@@ -94,7 +97,7 @@ class TFIDF(KeywordExtractor):
                 elif not withFlag:
                     w = w.word
             wc = w.word if allowPOS and withFlag else w
-            if len(wc.strip()) < 2 or wc.lower() in self.stop_words:
+            if len(wc.strip()) < 2 or wc.lower() in self.stopwords:
                 continue
             freq[w] = freq.get(w, 0.0) + 1.0
         total = sum(freq.values())
@@ -108,5 +111,4 @@ class TFIDF(KeywordExtractor):
             tags = sorted(freq, key=freq.__getitem__, reverse=True)
         if topK:
             return tags[:topK]
-        else:
-            return tags
+        return tags

@@ -11,12 +11,8 @@ term数目、位置信息、句法依存tag、是否数字、是否英文、是�
 
 import codecs
 from copy import deepcopy
-
 import numpy as np
-from text2vec import Similarity, SimType, EmbType
-
 from wordrank import config
-from wordrank.utils.logger import logger
 from wordrank.utils.text_utils import is_number_string, is_alphabet_string, is_chinese_string
 from wordrank.utils.tokenizer import word_segment
 
@@ -42,8 +38,7 @@ class TextFeature(object):
         self.place_names = self.load_set_file(place_name_path)
         self.common_chars = self.load_set_file(common_char_path)
         self.segment_sep = segment_sep
-        self.sim = Similarity(similarity_type=SimType.COSINE, embedding_type=EmbType.SBERT)
-        self.sim.load_model()
+        # self.sim = Similarity()
 
     @staticmethod
     def load_set_file(path):
@@ -97,12 +92,12 @@ class TextFeature(object):
         idx = 0
         offset = 0
         for word in word_seq:
-            emb = self.sim.model.encode(word)
+            # emb = self.sim.model.encode(word)
             word_list = deepcopy(word_seq)
             if word in word_list:
                 word_list.remove(word)
-            del_word_query = ''.join(word_list)
-            del_term_sim_score = self.sim.get_score(query, del_word_query)
+            # del_word_query = ''.join(word_list)
+            # del_term_sim_score = self.sim.get_score(query, del_word_query)
             term_features.append(AttrDict(
                 term=word,
                 term_length=len(word),
@@ -115,8 +110,8 @@ class TextFeature(object):
                 is_name=self.is_name(word),
                 # is_entity=self.is_entity(pos),
                 is_common_char=self.is_common_char_string(word),
-                embedding_sum=np.sum(emb),
-                del_term_score=del_term_sim_score,
+                # embedding_sum=np.sum(emb),
+                # del_term_score=del_term_sim_score,
             ))
             idx += len(word)
             offset += 1

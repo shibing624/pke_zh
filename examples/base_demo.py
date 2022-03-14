@@ -13,5 +13,5 @@ if __name__ == '__main__':
     r = wordrank.rank(q)
     print(r)
 
-    p = '哪里下载电视剧周恩来？'
+    p = '井冈山景点介绍'
     print(wordrank.rank(p))

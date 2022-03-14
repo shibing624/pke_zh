@@ -34,3 +34,5 @@ if __name__ == '__main__':
     print(pmi_model.entropy_score('天龙'))
     print(pmi_model.entropy_score('大蒜'))
     print(pmi_model.entropy_score('大蒜价格'))
+    
+

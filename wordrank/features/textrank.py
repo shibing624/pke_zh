@@ -10,8 +10,6 @@ from operator import itemgetter
 
 import jieba.posseg
 
-from .tfidf import KeywordExtractor
-
 
 class UndirectWeightedGraph:
     d = 0.85
@@ -57,17 +55,18 @@ class UndirectWeightedGraph:
         return ws
 
 
-class TextRank(KeywordExtractor):
+class TextRank4Keyword:
 
-    def __init__(self):
-        self.tokenizer = self.postokenizer = jieba.posseg.dt
-        self.stop_words = self.STOP_WORDS.copy()
+    def __init__(self, stopwords=None):
+        self.tokenizer = jieba.posseg.dt
+        self.postokenizer = jieba.posseg.dt
+        self.stopwords = stopwords if stopwords else []
         self.pos_filt = frozenset(('ns', 'n', 'vn', 'v'))
         self.span = 5
 
     def pairfilter(self, wp):
         return (wp.flag in self.pos_filt and len(wp.word.strip()) >= 2
-                and wp.word.lower() not in self.stop_words)
+                and wp.word.lower() not in self.stopwords)
 
     def textrank(self, sentence, topK=20, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False):
         """

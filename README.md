@@ -24,6 +24,8 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 # Feature
 
 如何计算query中各word的权重呢？
+
+
 ## 思路
 ### 特征工程的解决思路
 1. 实现时采用模型打分方法，以搜索query为原始语料，人工标注句子中各词重要度
@@ -84,6 +86,7 @@ pip3 install text2vec pycorrector
 
 # Usage
 
+### 词权重计算
 ```python
 import wordrank
 
@@ -99,6 +102,19 @@ output:
 > 3：核心词；2：限定词；1：可省略词；0：干扰词。
 
 
+### 模型训练和预测
+
+训练：
+```shell
+cd examples
+python train.py
+```
+
+预测：
+```shell
+cd examples
+python infer.py
+```
 ### 命令行
 
 使用示例： python -m wordrank
