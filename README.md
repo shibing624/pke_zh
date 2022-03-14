@@ -15,10 +15,10 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 **Guide**
 
 - [Feature](#Feature)
+- [Evaluation](#Evaluation)
 - [Install](#install)
 - [Usage](#usage)
 - [Contact](#Contact)
-- [Cite](#Cite)
 - [Reference](#reference)
 
 # Feature
@@ -57,18 +57,27 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 * BERT CLS + classification
 * Seq2Seq + Attention
 
+# Evaluation
+
+| Model | Dataset | QPS |
+| :---- | :-: | :-: |
+| TextRank | - | - |
+| TFIDF | - | - |
+| WordRank | - | - |
+
+> 结果值使用F1
+
 # Install
-* 全自动安装：
+* From pip:
 ```shell
 pip3 install -U wordrank
 ```
-* 半自动安装：
+* From source：
 ```shell
 git clone https://github.com/shibing624/wordrank.git
 cd wordrank
 python3 setup.py install
 ```
-
 
 ### 依赖库
 
@@ -82,6 +91,7 @@ pip3 install -U pycorrector
 ### 依赖数据
 * 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，模型由pycorrector库自动下载于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm 。
 * 中文文本匹配模型[shibing624/text2vec-base-chinese](https://huggingface.co/shibing624/text2vec-base-chinese) ，模型由transformers库自动下载于：~/.cache/huggingface/transformers/ 下。
+
 # Usage
 
 ### 词权重计算
@@ -195,7 +205,7 @@ model.check_inited()
 <img src="http://42.193.145.218/github_data/xm_wechat_erweima.png" width="200" />
 
 
-# Cite
+# Citation
 
 如果你在研究中使用了wordrank，请按如下格式引用：
 

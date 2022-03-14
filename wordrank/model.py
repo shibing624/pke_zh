@@ -14,7 +14,7 @@ from wordrank.utils.io_utils import save_pkl, load_pkl
 from wordrank.utils.logger import logger
 
 
-def data_reader(file_path, col_sep='\t'):
+def data_reader(file_path, col_sep=','):
     """
     Load data
     :param file_path:
@@ -71,15 +71,18 @@ def train(
     logger.info('contents size:%s, labels size:%s' % (len(contents), len(labels)))
 
     # 2.get feature
-    feat = Feature(stopwords_path=stopwords_path,
-                   person_name_path=person_name_path,
-                   place_name_path=place_name_path,
-                   common_char_path=common_char_path,
-                   segment_sep=segment_sep,
-                   domain_sample_path=domain_sample_path,
-                   ngram=ngram,
-                   pmi_path=pmi_path,
-                   entropy_path=entropy_path)
+    feat = Feature(
+        stopwords_path=stopwords_path,
+        person_name_path=person_name_path,
+        place_name_path=place_name_path,
+        common_char_path=common_char_path,
+        segment_sep=segment_sep,
+        domain_sample_path=domain_sample_path,
+        ngram=ngram,
+        pmi_path=pmi_path,
+        entropy_path=entropy_path,
+        is_training=True
+    )
 
     features = []
     tags = []
@@ -126,16 +129,18 @@ def predict(
 ):
     logger.info('model predict')
     # get feature
-    feat = Feature(stopwords_path=stopwords_path,
-                   person_name_path=person_name_path,
-                   place_name_path=place_name_path,
-                   common_char_path=common_char_path,
-                   segment_sep=segment_sep,
-                   domain_sample_path=domain_sample_path,
-                   ngram=ngram,
-                   pmi_path=pmi_path,
-                   entropy_path=entropy_path
-                   )
+    feat = Feature(
+        stopwords_path=stopwords_path,
+        person_name_path=person_name_path,
+        place_name_path=place_name_path,
+        common_char_path=common_char_path,
+        segment_sep=segment_sep,
+        domain_sample_path=domain_sample_path,
+        ngram=ngram,
+        pmi_path=pmi_path,
+        entropy_path=entropy_path,
+        is_training=False
+    )
     features, terms = feat.get_feature(query, is_word_segmented=False)
     # predict classification model
     model = load_pkl(model_path)

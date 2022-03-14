@@ -28,15 +28,17 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', type=str, default=config.model_path, help='model file path to save')
     args = parser.parse_args()
     print(args)
-    train(args.train_file,
-          args.col_sep,
-          args.stopwords_path,
-          args.person_name_path,
-          args.place_name_path,
-          args.common_char_path,
-          args.segment_sep,
-          args.domain_sample_path,
-          args.ngram,
-          args.pmi_path,
-          args.entropy_path,
-          args.model_path)
+    train(
+        args.train_file,
+        args.col_sep,
+        args.stopwords_path,
+        args.person_name_path,
+        args.place_name_path,
+        args.common_char_path,
+        args.segment_sep,
+        args.domain_sample_path,
+        args.ngram,
+        args.pmi_path,
+        args.entropy_path,
+        args.model_path
+    )

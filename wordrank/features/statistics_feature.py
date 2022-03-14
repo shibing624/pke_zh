@@ -17,20 +17,22 @@ from wordrank.features.tfidf import load_stopwords
 
 
 class StatisticsFeature(object):
-    def __init__(self,
-                 domain_sample_path=config.domain_sample_path,
-                 ngram=4,
-                 pmi_path=config.pmi_path,
-                 entropy_path=config.entropy_path,
-                 segment_sep=config.segment_sep,
-                 stopwords_path=config.stopwords_path,
-                 ):
+    def __init__(
+            self,
+            domain_sample_path=config.domain_sample_path,
+            ngram=4,
+            pmi_path=config.pmi_path,
+            entropy_path=config.entropy_path,
+            segment_sep=config.segment_sep,
+            stopwords_path=config.stopwords_path,
+            is_training=False
+    ):
         stopwords = load_stopwords(stopwords_path)
         self.tfidf = TFIDF4Keyword(stopwords=stopwords)
         self.text_rank = TextRank4Keyword(stopwords=stopwords)
         self.segment_sep = segment_sep
         self.pmi_model = PMI(
-            text=self.read_text(domain_sample_path),
+            text=self.read_text(domain_sample_path) if is_training else None,
             ngram=ngram,
             pmi_path=pmi_path,
             entropy_path=entropy_path

@@ -37,7 +37,7 @@ class WordRank(Feature):
             ngram=ngram,
             pmi_path=pmi_path,
             entropy_path=entropy_path,
-            sentence_delimiters=sentence_delimiters
+            sentence_delimiters=sentence_delimiters,
         )
         self.model_path = model_path
         self.inited = False

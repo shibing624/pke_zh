@@ -12,18 +12,20 @@ from wordrank.utils.logger import logger
 
 
 class Feature(object):
-    def __init__(self,
-                 stopwords_path=config.stopwords_path,
-                 person_name_path=config.person_name_path,
-                 place_name_path=config.place_name_path,
-                 common_char_path=config.common_char_path,
-                 segment_sep=config.segment_sep,
-                 domain_sample_path=config.domain_sample_path,
-                 ngram=config.ngram,
-                 pmi_path=config.pmi_path,
-                 entropy_path=config.entropy_path,
-                 sentence_delimiters=config.sentence_delimiters,
-                 ):
+    def __init__(
+            self,
+            stopwords_path=config.stopwords_path,
+            person_name_path=config.person_name_path,
+            place_name_path=config.place_name_path,
+            common_char_path=config.common_char_path,
+            segment_sep=config.segment_sep,
+            domain_sample_path=config.domain_sample_path,
+            ngram=config.ngram,
+            pmi_path=config.pmi_path,
+            entropy_path=config.entropy_path,
+            sentence_delimiters=config.sentence_delimiters,
+            is_training=False,
+    ):
         self.stopwords_path = stopwords_path
         self.person_name_path = person_name_path
         self.place_name_path = place_name_path
@@ -38,6 +40,7 @@ class Feature(object):
         self.text_feature = None
         self.statistics_feature = None
         self.feature_inited = False
+        self.is_training = is_training
 
     def _init_feature(self):
         """
@@ -55,7 +58,9 @@ class Feature(object):
             domain_sample_path=self.domain_sample_path,
             ngram=self.ngram,
             pmi_path=self.pmi_path,
-            entropy_path=self.entropy_path)
+            entropy_path=self.entropy_path,
+            is_training=self.is_training
+        )
         self.language_feature = LanguageFeature()
         self.feature_inited = True
 

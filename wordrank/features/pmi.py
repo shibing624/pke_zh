@@ -7,9 +7,9 @@
 左右邻熵：左右熵值越大，说明该词的周边词越丰富，意味着词的自由程度越大，其成为一个独立的词的可能性也就越大。
 """
 
-import os
 import re
 from collections import Counter
+from typing import Optional
 
 import numpy as np
 
@@ -32,7 +32,7 @@ def ngram_freq(text, ngram=4):
     return words_freq
 
 
-def generate_pmi_score(word_freq_dict, pmi_path):
+def generate_pmi_score(word_freq_dict, pmi_path=None):
     """
     Generate PMI score
     :param word_freq_dict: dict
@@ -44,7 +44,9 @@ def generate_pmi_score(word_freq_dict, pmi_path):
             p_x_y = min([word_freq_dict.get(word[:i]) * word_freq_dict.get(word[i:]) for i in range(1, len(word))])
             score = p_x_y / word_freq_dict.get(word)
             result[word] = score
-    save_json(result, pmi_path)
+    if pmi_path:
+        save_json(result, pmi_path)
+        logger.info('Save pmi score to %s' % pmi_path)
     return result
 
 
@@ -61,7 +63,7 @@ def entropy_score(char_list):
     return entropy
 
 
-def generate_entropy_score(word_freq_dict, text, entropy_path):
+def generate_entropy_score(word_freq_dict, text, entropy_path=None):
     """
     Generate entropy score
     :param word_freq_dict: dict
@@ -87,27 +89,30 @@ def generate_entropy_score(word_freq_dict, text, entropy_path):
                 result[word] = [left_entropy, right_entropy]
         except Exception as e:
             logger.error('error word %s, %s' % (word, e))
-    save_json(result, entropy_path)
+    if entropy_path:
+        save_json(result, entropy_path)
+        logger.info('Save entropy score to %s' % entropy_path)
     return result
 
 
 class PMI(object):
     def __init__(
             self,
-            text='',
-            ngram=4,
-            pmi_path=config.pmi_path,
-            entropy_path=config.entropy_path
+            text: str = None,
+            ngram: int = 4,
+            pmi_path: Optional[str] = config.pmi_path,
+            entropy_path: Optional[str] = config.entropy_path
     ):
-        if os.path.exists(pmi_path) and os.path.exists(entropy_path):
-            self.pmi_score_dict = load_json(pmi_path)
-            self.entropy_score_dict = load_json(entropy_path)
-        elif len(text.strip()) > 0:
+        if text is not None and len(text) > 0:
+            logger.info('Use input text to generate PMI dict')
+            text = text.strip()
             words_freq = ngram_freq(text, ngram)
             self.pmi_score_dict = generate_pmi_score(words_freq, pmi_path)
             self.entropy_score_dict = generate_entropy_score(words_freq, text, entropy_path)
         else:
-            raise ValueError("text and saved file path must exist one")
+            self.pmi_score_dict = load_json(pmi_path)
+            self.entropy_score_dict = load_json(entropy_path)
+            logger.debug('Loaded PMI dict: %s' % pmi_path)
 
     def pmi_score(self, word):
         """
