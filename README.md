@@ -73,17 +73,15 @@ python3 setup.py install
 ### 依赖库
 
 ```shell
-pip3 install text2vec pycorrector
+pip3 install -U pycorrector
 ```
 主要包括以下Python包：
-* [text2vec](https://github.com/shibing624/text2vec)
 * [pycorrector](https://github.com/shibing624/pycorrector)
+* [text2vec](https://github.com/shibing624/text2vec)(optional)
 
 ### 依赖数据
-
-* SentenceBERT模型[sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2) ，模型由transformers库自动下载于：~/.cache/huggingface/transformers/ 下。
 * 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，模型由pycorrector库自动下载于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm 。
-
+* 中文文本匹配模型[shibing624/text2vec-base-chinese](https://huggingface.co/shibing624/text2vec-base-chinese) ，模型由transformers库自动下载于：~/.cache/huggingface/transformers/ 下。
 # Usage
 
 ### 词权重计算

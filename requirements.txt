@@ -1,3 +1,2 @@
-text2vec
 pycorrector
 scikit-learn

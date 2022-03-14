@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-# Author: XuMing(xuming624@qq.com)
-# Brief: 
-from __future__ import print_function
+"""
+@author:XuMing(xuming624@qq.com)
+@description:
+"""
 
 import sys
 
@@ -35,23 +36,21 @@ setup(
         'Natural Language :: Chinese (Traditional)',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
         'Topic :: Text Processing :: Linguistic',
         'Topic :: Scientific/Engineering :: Artificial Intelligence',
     ],
     platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
     keywords='wordrank,term weighting,textrank,word rank,wordweight',
     install_requires=[
-        "text2vec",
         "pycorrector",
         "scikit-learn",
     ],
     packages=find_packages(exclude=['tests']),
     package_dir={'wordrank': 'wordrank'},
-    package_data={'wordrank': ['*.*', '../LICENSE', '../README.*', '../*.txt', 'data/*',
-                               '../extra_data/*.*', ]}
+    package_data={'wordrank': ['*.*', 'data/*', '../extra_data/*.*', ]}
 )
