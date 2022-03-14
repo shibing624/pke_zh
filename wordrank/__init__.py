@@ -3,6 +3,7 @@
 @author:XuMing(xuming624@qq.com)
 @description: 
 """
+from wordrank.version import __version__
 from wordrank import config
 from wordrank.wordrank import WordRank
 from wordrank.utils.logger import set_log_level
