@@ -7,7 +7,7 @@
 import sys
 from collections import defaultdict
 from operator import itemgetter
-
+from wordrank.features.tfidf import load_stopwords, stopwords_path
 import jieba.posseg
 
 
@@ -60,7 +60,7 @@ class TextRank4Keyword:
     def __init__(self, stopwords=None):
         self.tokenizer = jieba.posseg.dt
         self.postokenizer = jieba.posseg.dt
-        self.stopwords = stopwords if stopwords else []
+        self.stopwords = stopwords if stopwords else load_stopwords(stopwords_path)
         self.pos_filt = frozenset(('ns', 'n', 'vn', 'v'))
         self.span = 5
 
@@ -68,7 +68,7 @@ class TextRank4Keyword:
         return (wp.flag in self.pos_filt and len(wp.word.strip()) >= 2
                 and wp.word.lower() not in self.stopwords)
 
-    def textrank(self, sentence, topK=20, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False):
+    def extract_tags(self, sentence, topK=20, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False):
         """
         Extract keywords from sentence using TextRank algorithm.
         Parameter:
@@ -102,7 +102,8 @@ class TextRank4Keyword:
         if withWeight:
             tags = sorted(nodes_rank.items(), key=itemgetter(1), reverse=True)
         else:
-            tags = sorted(nodes_rank, key=nodes_rank.__getitem__, reverse=True)
+            # tags = sorted(nodes_rank, key=nodes_rank.__getitem__, reverse=True)
+            tags = list(nodes_rank.keys())
 
         if topK:
             return tags[:topK]

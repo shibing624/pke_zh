@@ -11,6 +11,9 @@ import jieba.posseg
 from jieba.analyse.tfidf import DEFAULT_IDF, _get_abs_path
 from operator import itemgetter
 
+pwd_path = os.path.abspath(os.path.dirname(__file__))
+# inner data file
+stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
 
 
 def load_stopwords(file_path):
@@ -50,7 +53,7 @@ class TFIDF4Keyword:
     def __init__(self, idf_path=None, stopwords=None):
         self.tokenizer = jieba.dt
         self.postokenizer = jieba.posseg.dt
-        self.stopwords = stopwords if stopwords else []
+        self.stopwords = stopwords if stopwords else load_stopwords(stopwords_path)
         self.idf_loader = IDFLoader(idf_path or DEFAULT_IDF)
         self.idf_freq, self.median_idf = self.idf_loader.get_idf()
 
@@ -108,7 +111,8 @@ class TFIDF4Keyword:
         if withWeight:
             tags = sorted(freq.items(), key=itemgetter(1), reverse=True)
         else:
-            tags = sorted(freq, key=freq.__getitem__, reverse=True)
+            # tags = sorted(freq, key=freq.__getitem__, reverse=True)
+            tags = list(freq.keys())
         if topK:
             return tags[:topK]
         return tags

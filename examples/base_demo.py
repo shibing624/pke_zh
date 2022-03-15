@@ -8,10 +8,4 @@ import sys
 sys.path.append("..")
 import wordrank
 
-if __name__ == '__main__':
-    q = '哪里下载电视剧周恩来'
-    r = wordrank.rank(q)
-    print(r)
-
-    p = '井冈山景点介绍'
-    print(wordrank.rank(p))
+print(wordrank.rank("哪里下载电视剧周恩来？"))

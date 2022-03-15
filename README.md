@@ -94,21 +94,38 @@ pip3 install -U pycorrector
 
 # Usage
 
-### 词权重计算
+### 词权重计算（有监督）
 ```python
 import wordrank
 
-q = '哪里下载电视剧周恩来？'
-r = wordrank.rank(q)
+print(wordrank.rank("哪里下载电视剧周恩来？"))
+```
+
+output:
+```shell
+[('哪里', '1'), ('下载', '2'), ('电视剧', '3'), ('周恩来', '2'), ('？', 0)]
+```
+> 3：核心词；2：限定词；1：可省略词；0：干扰词。
+
+
+### 无监督词权重计算
+支持TFIDF和TextRank的词权重计算：
+
+```python
+from wordrank import TFIDF4Keyword, TextRank4Keyword
+
+r = TFIDF4Keyword().extract_tags("哪里下载电视剧周恩来？")
+print(r)
+
+r = TextRank4Keyword().extract_tags("哪里下载电视剧周恩来？")
 print(r)
 ```
 
 output:
 ```shell
-[('哪里', '1'), ('下载', '3'), ('电视剧', '3'), ('周恩来', '1'), ('？', 0)]
+['下载', '电视剧', '周恩来']
+['下载', '电视剧']
 ```
-> 3：核心词；2：限定词；1：可省略词；0：干扰词。
-
 
 ### 模型训练和预测
 

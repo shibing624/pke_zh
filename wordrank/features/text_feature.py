@@ -26,13 +26,14 @@ class AttrDict(dict):
 
 
 class TextFeature(object):
-    def __init__(self,
-                 stopwords_path=config.stopwords_path,
-                 person_name_path=config.person_name_path,
-                 place_name_path=config.place_name_path,
-                 common_char_path=config.common_char_path,
-                 segment_sep=config.segment_sep
-                 ):
+    def __init__(
+            self,
+            stopwords_path=config.stopwords_path,
+            person_name_path=config.person_name_path,
+            place_name_path=config.place_name_path,
+            common_char_path=config.common_char_path,
+            segment_sep=config.segment_sep
+    ):
         self.stopwords = self.load_set_file(stopwords_path)
         self.person_names = self.load_set_file(person_name_path)
         self.place_names = self.load_set_file(place_name_path)
