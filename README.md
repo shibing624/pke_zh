@@ -82,10 +82,10 @@ python3 setup.py install
 ### 依赖库
 
 ```shell
-pip3 install -U pycorrector
+pip install https://github.com/kpu/kenlm/archive/master.zip
 ```
 主要包括以下Python包：
-* [pycorrector](https://github.com/shibing624/pycorrector)
+* [kenlm](https://github.com/shibing624/pycorrector/wiki/Install-kenlm)
 * [text2vec](https://github.com/shibing624/text2vec)(optional)
 
 ### 依赖数据
@@ -219,7 +219,7 @@ model.check_inited()
 - Issue(建议)：[![GitHub issues](https://img.shields.io/github/issues/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/issues)
 - 邮件我：xuming: xuming624@qq.com
 - 微信我：加我*微信号：xuming624*, 进Python-NLP交流群，备注：*姓名-公司名-NLP*
-<img src="http://42.193.145.218/github_data/xm_wechat_erweima.png" width="200" />
+<img src="docs/wechat.jpeg" width="200" />
 
 
 # Citation

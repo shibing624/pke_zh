@@ -1,2 +1,5 @@
-pycorrector
+jieba>=0.39
+pypinyin
+numpy
+six
 scikit-learn
