@@ -12,10 +12,10 @@ from collections import Counter
 from typing import Optional
 
 import numpy as np
+from loguru import logger
 
 from wordrank import config
 from wordrank.utils.io_utils import save_json, load_json
-from wordrank.utils.logger import logger
 
 
 def ngram_freq(text, ngram=4):

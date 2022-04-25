@@ -6,6 +6,8 @@
 import sys
 
 sys.path.append("..")
-import wordrank
+from wordrank import WordRank
 
-print(wordrank.rank("哪里下载电视剧周恩来？"))
+m = WordRank()
+
+print(m.rank("哪里下载电视剧周恩来？"))

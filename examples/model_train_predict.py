@@ -9,10 +9,12 @@ import sys
 
 sys.path.append('..')
 from wordrank import config
-from wordrank.model import train
+from wordrank.model import train, predict
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--do_train", action="store_true", help="Whether not to train")
+    parser.add_argument("--do_predict", action="store_true", help="Whether not to predict")
     parser.add_argument('--train_file', type=str, default=config.train_file, help='train file, file encode utf-8.')
     parser.add_argument('--test_file', type=str, default=config.test_file, help='the test file path.')
     parser.add_argument('--col_sep', type=str, default=config.col_sep, help='column sep')
@@ -26,19 +28,36 @@ if __name__ == '__main__':
     parser.add_argument('--pmi_path', type=str, default=config.pmi_path, help='pmi_path')
     parser.add_argument('--entropy_path', type=str, default=config.entropy_path, help='entropy_path')
     parser.add_argument('--model_path', type=str, default=config.model_path, help='model file path to save')
+    parser.add_argument('--query', type=str, default='井冈山景点介绍', help='input query')
     args = parser.parse_args()
     print(args)
-    train(
-        args.train_file,
-        args.col_sep,
-        args.stopwords_path,
-        args.person_name_path,
-        args.place_name_path,
-        args.common_char_path,
-        args.segment_sep,
-        args.domain_sample_path,
-        args.ngram,
-        args.pmi_path,
-        args.entropy_path,
-        args.model_path
-    )
+    if args.do_train:
+        train(
+            args.train_file,
+            args.col_sep,
+            args.stopwords_path,
+            args.person_name_path,
+            args.place_name_path,
+            args.common_char_path,
+            args.segment_sep,
+            args.domain_sample_path,
+            args.ngram,
+            args.pmi_path,
+            args.entropy_path,
+            args.model_path
+        )
+    if args.do_predict:
+        pred_result = predict(
+            args.query,
+            args.model_path,
+            args.stopwords_path,
+            args.person_name_path,
+            args.place_name_path,
+            args.common_char_path,
+            args.segment_sep,
+            args.domain_sample_path,
+            args.ngram,
+            args.pmi_path,
+            args.entropy_path
+        )
+        print("predict label: %s" % pred_result)

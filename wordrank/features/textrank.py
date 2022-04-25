@@ -40,7 +40,7 @@ class UndirectWeightedGraph:
                     s += e[2] / outSum[e[1]] * ws[e[1]]
                 ws[n] = (1 - self.d) + self.d * s
 
-        (min_rank, max_rank) = (sys.float_info[0], sys.float_info[3])
+        min_rank, max_rank = sys.float_info[0], sys.float_info[3]
 
         for w in ws.values():
             if w < min_rank:
@@ -56,7 +56,6 @@ class UndirectWeightedGraph:
 
 
 class TextRank4Keyword:
-
     def __init__(self, stopwords=None):
         self.tokenizer = jieba.posseg.dt
         self.postokenizer = jieba.posseg.dt
@@ -68,7 +67,7 @@ class TextRank4Keyword:
         return (wp.flag in self.pos_filt and len(wp.word.strip()) >= 2
                 and wp.word.lower() not in self.stopwords)
 
-    def extract_tags(self, sentence, topK=20, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False):
+    def extract(self, sentence, topK=20, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False):
         """
         Extract keywords from sentence using TextRank algorithm.
         Parameter:
@@ -100,12 +99,11 @@ class TextRank4Keyword:
             g.addEdge(terms[0], terms[1], w)
         nodes_rank = g.rank()
         if withWeight:
-            tags = sorted(nodes_rank.items(), key=itemgetter(1), reverse=True)
+            keywords = sorted(nodes_rank.items(), key=itemgetter(1), reverse=True)
         else:
-            # tags = sorted(nodes_rank, key=nodes_rank.__getitem__, reverse=True)
-            tags = list(nodes_rank.keys())
+            keywords = list(nodes_rank.keys())
 
         if topK:
-            return tags[:topK]
+            return keywords[:topK]
         else:
-            return tags
+            return keywords

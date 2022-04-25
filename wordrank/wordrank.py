@@ -3,12 +3,11 @@
 @author:XuMing(xuming624@qq.com)
 @description: Word Rank module, main
 """
-
+from loguru import logger
 from wordrank import config
 from wordrank.feature import Feature
 from wordrank.utils import tokenizer
 from wordrank.utils.io_utils import load_pkl
-from wordrank.utils.logger import logger
 from wordrank.utils.text_utils import convert_to_unicode
 
 
@@ -75,3 +74,12 @@ class WordRank(Feature):
             for w, p in self.rank_query(sentence):
                 result.append((w, p))
         return result
+
+    def extract(self, text):
+        """
+        Extract keywords from text
+        :param text:
+        :return:
+        """
+        term_weights = self.rank(text)
+        return [t for t, w in term_weights if w >= 2]

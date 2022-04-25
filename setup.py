@@ -47,7 +47,11 @@ setup(
     platforms=["Windows", "Linux", "Solaris", "Mac OS-X", "Unix"],
     keywords='wordrank,term weighting,textrank,word rank,wordweight',
     install_requires=[
-        "pycorrector",
+        "loguru",
+        "jieba>=0.39",
+        "pypinyin",
+        "numpy"
+        "six",
         "scikit-learn",
     ],
     packages=find_packages(exclude=['tests']),

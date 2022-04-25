@@ -3,7 +3,7 @@
 @author:XuMing(xuming624@qq.com)
 @description: 
 """
-
+from loguru import logger
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import classification_report
@@ -11,7 +11,6 @@ from sklearn.model_selection import train_test_split
 
 from wordrank.feature import Feature
 from wordrank.utils.io_utils import save_pkl, load_pkl
-from wordrank.utils.logger import logger
 
 
 def data_reader(file_path, col_sep=','):

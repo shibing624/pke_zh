@@ -9,7 +9,7 @@
 
 Word Rank(term weighting), calculate context-aware bag-of-words term weights for documents and queries.
 
-**wordrank**基于特征工程的词重要度分析工具，支持词权重打分、词干提取等query分析，扩展性强，开箱即用。
+**wordrank**基于特征工程的词重要度分析工具，支持词权重打分、词干提取、核心词提取等功能，扩展性强，开箱即用。
 
 
 **Guide**
@@ -23,7 +23,7 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 
 # Feature
 
-如何计算query中各word的权重呢？
+如何计算query或doc中各word的权重呢？
 
 
 ## 思路
@@ -114,10 +114,10 @@ output:
 ```python
 from wordrank import TFIDF4Keyword, TextRank4Keyword
 
-r = TFIDF4Keyword().extract_tags("哪里下载电视剧周恩来？")
+r = TFIDF4Keyword().extract("哪里下载电视剧周恩来？")
 print(r)
 
-r = TextRank4Keyword().extract_tags("哪里下载电视剧周恩来？")
+r = TextRank4Keyword().extract("哪里下载电视剧周恩来？")
 print(r)
 ```
 

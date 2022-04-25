@@ -8,7 +8,7 @@ from wordrank import config
 from wordrank.features.language_feature import LanguageFeature
 from wordrank.features.statistics_feature import StatisticsFeature
 from wordrank.features.text_feature import TextFeature
-from wordrank.utils.logger import logger
+
 
 
 class Feature(object):

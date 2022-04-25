@@ -74,7 +74,7 @@ class TFIDF4Keyword:
             res.append(word_idf.get(w, 0))
         return res
 
-    def extract_tags(self, sentence, topK=20, withWeight=False, allowPOS=(), withFlag=False):
+    def extract(self, sentence, topK=20, withWeight=False, allowPOS=(), withFlag=False):
         """
         Extract keywords from sentence using TF-IDF algorithm.
         Parameter:
@@ -109,10 +109,9 @@ class TFIDF4Keyword:
             freq[k] *= self.idf_freq.get(kw, self.median_idf) / total
 
         if withWeight:
-            tags = sorted(freq.items(), key=itemgetter(1), reverse=True)
+            keywords = sorted(freq.items(), key=itemgetter(1), reverse=True)
         else:
-            # tags = sorted(freq, key=freq.__getitem__, reverse=True)
-            tags = list(freq.keys())
+            keywords = list(freq.keys())
         if topK:
-            return tags[:topK]
-        return tags
+            return keywords[:topK]
+        return keywords

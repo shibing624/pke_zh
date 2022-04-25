@@ -68,8 +68,8 @@ class StatisticsFeature(object):
         """
         term_features = []
         sentence_features = {}
-        rank_tags = self.text_rank.extract_tags(query, withWeight=True)
-        tfidf_tags = self.tfidf.extract_tags(query, withWeight=True)
+        rank_tags = self.text_rank.extract(query, withWeight=True)
+        tfidf_tags = self.tfidf.extract(query, withWeight=True)
 
         if is_word_segmented:
             word_seq = query.split(self.segment_sep)

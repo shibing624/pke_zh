@@ -28,33 +28,33 @@ class CaseTestCase(unittest.TestCase):
     def test_textrank(self):
         for s in sents:
             m = TextRank4Keyword()
-            r = m.extract_tags(s)
+            r = m.extract(s)
             print(r)
 
         for s in sents:
             m = TextRank4Keyword()
-            r = m.extract_tags(s, withWeight=True, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False)
+            r = m.extract(s, withWeight=True, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=False)
             print(r)
 
         for s in sents:
             m = TextRank4Keyword()
-            r = m.extract_tags(s, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=True)
+            r = m.extract(s, withWeight=False, allowPOS=('ns', 'n', 'vn', 'v'), withFlag=True)
             print(r)
 
     def test_tfidf(self):
         for s in sents:
             m = TFIDF4Keyword()
-            r = m.extract_tags(s)
+            r = m.extract(s)
             print(r)
 
         for s in sents:
             m = TFIDF4Keyword()
-            r = m.extract_tags(s, withWeight=True, withFlag=False)
+            r = m.extract(s, withWeight=True, withFlag=False)
             print(r)
 
         for s in sents:
             m = TFIDF4Keyword()
-            r = m.extract_tags(s, withWeight=False, withFlag=True)
+            r = m.extract(s, withWeight=False, withFlag=True)
             print(r)
 
 

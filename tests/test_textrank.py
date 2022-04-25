@@ -24,12 +24,12 @@ class TextRankTestCase(unittest.TestCase):
              '一个男人在吹一支大笛子。',
              '一个人正把切碎的奶酪撒在比萨饼上。']
         for q in s:
-            for x, w in TextRank4Keyword().extract_tags(q, withWeight=True):
+            for x, w in TextRank4Keyword().extract(q, withWeight=True):
                 print('%s %s' % (x, w))
             print()
         print('-' * 42)
         for q in s:
-            for x, w in TFIDF4Keyword().extract_tags(q, withWeight=True):
+            for x, w in TFIDF4Keyword().extract(q, withWeight=True):
                 print('%s %s' % (x, w))
             print()
 

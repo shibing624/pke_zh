@@ -7,12 +7,11 @@
 """
 
 from copy import deepcopy
-
+from loguru import logger
 import os
 
 from wordrank.features.text_feature import AttrDict
 from wordrank.utils.tokenizer import word_segment
-from wordrank.utils.logger import logger
 from wordrank.utils.file_utils import get_file
 
 
