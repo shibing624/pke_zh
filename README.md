@@ -54,18 +54,9 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 * 语言模型特征：整个query的语言模型概率 / 去掉该Term后的Query的语言模型概率
 
 ### 深度模型
-* BERT CLS + classification
-* Seq2Seq + Attention
+* BERT CLS + softmax 
+* Seq2Seq 文本摘要模型
 
-# Evaluation
-
-| Model | Dataset | QPS |
-| :---- | :-: | :-: |
-| TextRank | - | - |
-| TFIDF | - | - |
-| WordRank | - | - |
-
-> 结果值使用F1
 
 # Install
 * From pip:
