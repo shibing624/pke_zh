@@ -50,7 +50,7 @@ setup(
         "loguru",
         "jieba>=0.39",
         "pypinyin",
-        "numpy"
+        "numpy",
         "six",
         "scikit-learn",
     ],
