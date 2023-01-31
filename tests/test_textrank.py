@@ -8,10 +8,10 @@ import sys
 import unittest
 
 sys.path.append('..')
-from wordrank import WordRank
+from pke_zh import WordRank
 
-from wordrank.features.textrank import TextRank4Keyword
-from wordrank.features.tfidf import TFIDF4Keyword
+from pke_zh.features.textrank import TextRank4Keyword
+from pke_zh.features.tfidf import TFIDF4Keyword
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 

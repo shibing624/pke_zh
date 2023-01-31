@@ -1,15 +1,15 @@
-# wordrank
-[![PyPI version](https://badge.fury.io/py/wordrank.svg)](https://badge.fury.io/py/wordrank)
+# pke_zh
+[![PyPI version](https://badge.fury.io/py/pke_zh.svg)](https://badge.fury.io/py/pke_zh)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![GitHub contributors](https://img.shields.io/github/contributors/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/graphs/contributors)
+[![GitHub contributors](https://img.shields.io/github/contributors/shibing624/pke_zh.svg)](https://github.com/shibing624/pke_zh/graphs/contributors)
 [![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![python_vesion](https://img.shields.io/badge/Python-3.5%2B-green.svg)](requirements.txt)
-[![GitHub issues](https://img.shields.io/github/issues/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/issues)
+[![GitHub issues](https://img.shields.io/github/issues/shibing624/pke_zh.svg)](https://github.com/shibing624/pke_zh/issues)
 [![Wechat Group](http://vlog.sfyc.ltd/wechat_everyday/wxgroup_logo.png?imageView2/0/w/60/h/20)](#Contact)
 
 Word Rank(term weighting), calculate context-aware bag-of-words term weights for documents and queries.
 
-**wordrank**基于特征工程的词重要度分析工具，支持词权重打分、词干提取、核心词提取等功能，扩展性强，开箱即用。
+**pke_zh**基于特征工程的词重要度分析工具，支持词权重打分、词干提取、核心词提取等功能，扩展性强，开箱即用。
 
 
 **Guide**
@@ -61,23 +61,14 @@ Word Rank(term weighting), calculate context-aware bag-of-words term weights for
 # Install
 * From pip:
 ```shell
-pip3 install -U wordrank
+pip3 install -U pke_zh
 ```
 * From source：
 ```shell
-git clone https://github.com/shibing624/wordrank.git
-cd wordrank
+git clone https://github.com/shibing624/pke_zh.git
+cd pke_zh
 python3 setup.py install
 ```
-
-### 依赖库
-
-```shell
-pip install https://github.com/kpu/kenlm/archive/master.zip
-```
-主要包括以下Python包：
-* [kenlm](https://github.com/shibing624/pycorrector/wiki/Install-kenlm)
-* [text2vec](https://github.com/shibing624/text2vec)(optional)
 
 ### 依赖数据
 * 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，模型由pycorrector库自动下载于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm 。
@@ -86,10 +77,11 @@ pip install https://github.com/kpu/kenlm/archive/master.zip
 # Usage
 
 ### 词权重计算（有监督）
-```python
-import wordrank
 
-print(wordrank.rank("哪里下载电视剧周恩来？"))
+```python
+import pke_zh
+
+print(pke_zh.rank("哪里下载电视剧周恩来？"))
 ```
 
 output:
@@ -103,7 +95,7 @@ output:
 支持TFIDF和TextRank的词权重计算：
 
 ```python
-from wordrank import TFIDF4Keyword, TextRank4Keyword
+from pke_zh import TFIDF4Keyword, TextRank4Keyword
 
 r = TFIDF4Keyword().extract("哪里下载电视剧周恩来？")
 print(r)
@@ -133,13 +125,13 @@ python infer.py
 ```
 ### 命令行
 
-使用示例： python -m wordrank
+使用示例： python -m pke_zh
 
 预测文本`井冈山景点介绍`的词重要度
 
 命令行选项（训练领域模型）：
 ```
-使用: python -m wordrank --train
+使用: python -m pke_zh --train
 
 如果没有指定训练文件，则使用默认训练样本`extra_data/train.csv`。
 ```
@@ -147,7 +139,7 @@ python infer.py
 
 `--help`选项输出：
 ```shell
-$> python -m wordrank --help
+$> python -m pke_zh --help
 
 usage: __main__.py [-h] [--train] [--train_file TRAIN_FILE]
                    [--col_sep COL_SEP] [--segment_sep SEGMENT_SEP]
@@ -189,25 +181,27 @@ optional arguments:
 
 ### 延迟加载机制
 
-wordrank 采用延迟加载，`import wordrank` 和 `from wordrank import WordRank` 不会立即触发词典及模型的加载，一旦有必要才开始加载词典。
-如果你想手工初始`wordrank`，也可以手动初始化。
+pke_zh 采用延迟加载，`import pke_zh` 和 `from pke_zh import pke_zh` 不会立即触发词典及模型的加载，一旦有必要才开始加载词典。
+如果你想手工初始`pke_zh`，也可以手动初始化。
+
 ```python
-from wordrank import WordRank
-model = WordRank()
+from pke_zh import pke_zh
+model = pke_zh()
 model.check_inited()  # 手动初始化（可选）
 ```
 
 你可以改变主模型的路径:
+
 ```python
-from wordrank import WordRank
-model = WordRank(model_path='/your/model/path')
+from pke_zh import pke_zh
+model = pke_zh(model_path='/your/model/path')
 model.check_inited()
 ```
 
 
 # Contact
 
-- Issue(建议)：[![GitHub issues](https://img.shields.io/github/issues/shibing624/wordrank.svg)](https://github.com/shibing624/wordrank/issues)
+- Issue(建议)：[![GitHub issues](https://img.shields.io/github/issues/shibing624/pke_zh.svg)](https://github.com/shibing624/pke_zh/issues)
 - 邮件我：xuming: xuming624@qq.com
 - 微信我：加我*微信号：xuming624*, 进Python-NLP交流群，备注：*姓名-公司名-NLP*
 <img src="docs/wechat.jpeg" width="200" />
@@ -215,21 +209,21 @@ model.check_inited()
 
 # Citation
 
-如果你在研究中使用了wordrank，请按如下格式引用：
+如果你在研究中使用了pke_zh，请按如下格式引用：
 
 ```latex
-@software{wordrank,
+@software{pke_zh,
   author = {Xu Ming},
-  title = {wordrank: A Tool for query term weighting},
+  title = {pke_zh: A Tool for query term weighting},
   year = {2021},
-  url = {https://github.com/shibing624/wordrank},
+  url = {https://github.com/shibing624/pke_zh},
 }
 ```
 
 # License
 
 
-授权协议为 [The Apache License 2.0](LICENSE)，可免费用做商业用途。请在产品说明中附加wordrank的链接和授权协议。
+授权协议为 [The Apache License 2.0](LICENSE)，可免费用做商业用途。请在产品说明中附加pke_zh的链接和授权协议。
 
 
 # Contribute

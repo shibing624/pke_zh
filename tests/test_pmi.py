@@ -5,13 +5,10 @@
 """
 
 import sys
-import os
 import unittest
 
 sys.path.append('..')
-from wordrank.features.pmi import PMI
-
-domain_sample_path = os.path.join(os.path.dirname(__file__), '../extra_data/train.csv')
+from pke_zh.supervised.wordrank import PMI
 
 
 class PMITestCase(unittest.TestCase):

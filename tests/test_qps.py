@@ -9,8 +9,8 @@ import unittest
 from time import time
 
 sys.path.append('..')
-from wordrank.model import data_reader
-from wordrank import WordRank
+from pke_zh.model import data_reader
+from pke_zh import WordRank
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 test_path = os.path.join(pwd_path, '../extra_data/train.csv')

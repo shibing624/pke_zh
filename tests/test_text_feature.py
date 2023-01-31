@@ -8,7 +8,7 @@ import os
 import unittest
 
 sys.path.append('..')
-from wordrank import TextFeature
+from pke_zh import TextFeature
 
 
 class TextTestCase(unittest.TestCase):

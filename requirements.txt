@@ -1,6 +1,8 @@
 loguru
-jieba>=0.39
-pypinyin
+jieba
+pandas
 numpy
 six
 scikit-learn
+scipy
+networkx
