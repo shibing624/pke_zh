@@ -8,12 +8,12 @@ import sys
 sys.path.append("..")
 from pke_zh.unsupervised.textrank import TextRank
 from pke_zh.unsupervised.tfidf import TfIdf
-from pke_zh.unsupervised.positionrank import PositionRank
-from pke_zh.unsupervised.keybert import KeyBert
-from pke_zh.unsupervised.multipartiterank import MultipartiteRank
 from pke_zh.unsupervised.singlerank import SingleRank
+from pke_zh.unsupervised.positionrank import PositionRank
 from pke_zh.unsupervised.topicrank import TopicRank
+from pke_zh.unsupervised.multipartiterank import MultipartiteRank
 from pke_zh.unsupervised.yake import Yake
+from pke_zh.unsupervised.keybert import KeyBert
 
 if __name__ == '__main__':
     sents = [
@@ -37,21 +37,22 @@ if __name__ == '__main__':
         r = TfIdf_m.extract(q)
         print('TfIdf:', r)
 
-        r = PositionRank_m.extract(q)
-        print('PositionRank_m:', r)
-
-        r = KeyBert_m.extract(q)
-        print('KeyBert_m:', r)
-
-        r = MultipartiteRank_m.extract(q)
-        print('MultipartiteRank_m:', r)
-
         r = SingleRank_m.extract(q)
         print('SingleRank_m:', r)
+
+        r = PositionRank_m.extract(q)
+        print('PositionRank_m:', r)
 
         r = TopicRank_m.extract(q)
         print('TopicRank_m:', r)
 
+        r = MultipartiteRank_m.extract(q)
+        print('MultipartiteRank_m:', r)
+
         r = Yake_m.extract(q)
         print('Yake_m:', r)
+
+        r = KeyBert_m.extract(q)
+        print('KeyBert_m:', r)
+
         print('-' * 40)

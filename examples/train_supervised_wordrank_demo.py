@@ -22,7 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--model_path', type=str, default='wordrank_test.pkl', help='model file path to save')
     args = parser.parse_args()
     print(args)
-    m = WordRank()
+    m = WordRank(model_path=args.model_path)
     if args.do_train:
         m.train(args.train_file, args.col_sep, is_word_segmented=True)
     if args.do_predict:

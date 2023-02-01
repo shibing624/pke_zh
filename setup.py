@@ -52,6 +52,8 @@ setup(
         "pandas",
         "numpy",
         "six",
+        "tqdm",
+        "requests",
         "scikit-learn",
         "scipy",
         "networkx",

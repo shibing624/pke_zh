@@ -17,7 +17,7 @@ from pke_zh.readers import RawTextReader
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 # inner data file
-default_stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
+default_stopwords_path = os.path.join(pwd_path, 'data/stopwords.txt')
 
 map_tag = {'ad': 'a', 'ag': 'a', 'an': 'a',
            'ng': 'n', 'nr': 'n', 'nrfg': 'n', 'nrt': 'n', 'ns': 'n', 'nt': 'n', 'nz': 'n',
@@ -59,12 +59,6 @@ class BaseKeywordExtractModel(object):
         self.weights = {}
         """Weight container (can be either word or candidate weights)."""
 
-        self._models = os.path.join(os.path.dirname(__file__), 'models')
-        """Root path of the models."""
-
-        self._df_counts = os.path.join(self._models, "df-semeval2010.tsv.gz")
-        """Path to the document frequency counts provided in pke."""
-
         self.stoplist = list(load_stopwords(stopwords_path)) if stopwords_path and os.path.exists(stopwords_path) \
             else list(load_stopwords(default_stopwords_path))
         """List of stopwords."""
@@ -83,7 +77,7 @@ class BaseKeywordExtractModel(object):
             words = sorted(words, key=lambda w: len(w), reverse=True)
             if len(words) > 10000:
                 logger.warning(
-                    "Too much matching-keyword! We strongly recommend you try the HugeKeywordMatching algo.")
+                    "Too much matching-keyword! We recommend you try the HugeKeywordMatching algo.")
             self.self_defined_keywords.extend(words)
 
         self.raw_text = ""
@@ -181,7 +175,7 @@ class BaseKeywordExtractModel(object):
 
         # loop through the best candidates
         for candidate in best:
-            # test wether candidate is redundant
+            # test weather candidate is redundant
             if self.is_redundant(candidate, non_redundant_best):
                 continue
 

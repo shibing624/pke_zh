@@ -11,7 +11,7 @@ sys.path.append('..')
 from pke_zh.supervised.wordrank import PMI
 
 
-class PMITestCase(unittest.TestCase):
+class TestCase(unittest.TestCase):
     def test_custom_pmi(self):
         text = """
         不难看出，CG并不考虑在搜索结果的排序信息，CG得分高只能说明这个结果页面总体的质量比较高并不能说明这个算法做的排序好或差。

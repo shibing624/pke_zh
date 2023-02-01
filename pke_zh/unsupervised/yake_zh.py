@@ -9,12 +9,17 @@ YAKE(Yet Another Keyword Extractor)，一种基于关键词统计的单文档无
 
 modify from: https://pypi.org/project/iyake-cn/0.5.5/#files
 """
+import os
 import jieba
 import pandas as pd
 import re
 from math import log10, sqrt
 from jieba import lcut, posseg
 
+pwd_path = os.path.abspath(os.path.dirname(__file__))
+
+# inner data file
+default_stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
 jieba.setLogLevel('ERROR')
 
 
@@ -169,11 +174,20 @@ def get_stopwords(txt_file):
     return set([line.strip() for line in open(txt_file, 'r', encoding='utf-8').readlines()])
 
 
-txt = '作为练习，笔者模仿 Yake 完成的 iyake_cn 模型在一定程度上实现了提取关键词的目标，它还可在全文词频归一化方式、上下文关系窗口大小、句子分割标志选取、补足分母的指标（adjust）等方面进行调参测试，并在整体计算上优化。此外，虽然 iyake_cn 比单纯的高频词提取效果要好，但停用词的维护依然是很重要的一环。'
-df = get_S_t(txt, stop=get_stopwords('../data/stopwords.txt'))
-words = get_key_words(df)
-print(words)
-txt = '物流很快，服务也很好，还有售后回馈。外观很时尚并且超大视野'
-df = get_S_t(txt, stop=get_stopwords('../data/stopwords.txt'))
-words = get_key_words(df)
-print(words)
+class YakeZH:
+    def __init__(self, stopwords_path=None):
+        if stopwords_path is None:
+            stopwords_path = default_stopwords_path
+        self.stopwords = get_stopwords(stopwords_path)
+
+    def extract(self, text, n_best=10):
+        df = get_S_t(text, stop=self.stopwords)
+        keyphrases = get_key_words(df, n_best=n_best)
+        return keyphrases
+
+
+if __name__ == '__main__':
+    txt = '物流很快，服务也很好，还有售后回馈。外观很时尚并且超大视野'
+    m = YakeZH()
+    words = m.extract(txt)
+    print(words)

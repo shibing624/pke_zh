@@ -51,7 +51,7 @@ def max_sum_ranking(doc_embedding: np.ndarray,
     cand_distance = distance_words[np.ix_(can_idx, can_idx)]
 
     # Calculate the 候选词里的topn of words的组合， that are the least similar to each other
-    min_sim = 100_000
+    min_sim = 100000
     final_candidate = None
     # print(can_idx)
     for combination in itertools.combinations(range(len(can_idx)), top_n):

@@ -26,7 +26,7 @@ from pke_zh.unsupervised.textrank import TextRank
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 
 # inner data file
-stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
+default_stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
 person_name_path = os.path.join(pwd_path, '../data/person_name.txt')
 place_name_path = os.path.join(pwd_path, '../data/place_name.txt')
 common_char_path = os.path.join(pwd_path, '../data/common_char_set.txt')
@@ -57,7 +57,7 @@ class StatisticsFeature:
             pmi_path=pmi_path,
             entropy_path=entropy_path,
             segment_sep=' ',
-            stopwords_path=stopwords_path,
+            stopwords_path=default_stopwords_path,
     ):
         self.tfidf_model = TfIdf(stopwords_path=stopwords_path)
         self.textrank_model = TextRank()
@@ -221,7 +221,7 @@ class PMI:
                 if left_entropy > 0 or right_entropy > 0:
                     result[word] = [left_entropy, right_entropy]
             except Exception as e:
-                logger.error('error word %s, %s' % (word, e))
+                logger.warning('error word %s, %s' % (word, e))
         if entropy_path:
             save_json(result, entropy_path)
             logger.info('Save entropy score to %s' % entropy_path)
@@ -253,7 +253,7 @@ class TextFeature:
 
     def __init__(
             self,
-            stopwords_path=stopwords_path,
+            stopwords_path=default_stopwords_path,
             person_name_path=person_name_path,
             place_name_path=place_name_path,
             common_char_path=common_char_path,
@@ -422,10 +422,13 @@ class LanguageFeature:
         return term_features, sentence_features
 
 
-class Feature:
+class WordRank:
+    """WordRank keyphrase extraction model."""
+
     def __init__(
             self,
-            stopwords_path=stopwords_path,
+            model_path=default_model_path,
+            stopwords_path=default_stopwords_path,
             person_name_path=person_name_path,
             place_name_path=place_name_path,
             common_char_path=common_char_path,
@@ -434,6 +437,12 @@ class Feature:
             pmi_path=pmi_path,
             entropy_path=entropy_path,
     ):
+        """ init word rank model
+
+        Args:
+            model_path (str): the path to load the model in pickle format,
+                default to "~/.cache/pke_zh/wordrank_model.pkl".
+        """
         self.text_feature = TextFeature(
             stopwords_path=stopwords_path,
             person_name_path=person_name_path,
@@ -449,6 +458,29 @@ class Feature:
             stopwords_path=stopwords_path,
         )
         self.language_feature = LanguageFeature()
+        self.segment_sep = segment_sep
+        self.model_path = model_path
+        self.model = None
+
+    @staticmethod
+    def data_reader(file_path, col_sep=','):
+        """
+        Load data
+        :param file_path:
+        :param col_sep:
+        :return: list, list: contents, labels
+        """
+        contents = []
+        labels = []
+        with open(file_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.rstrip()
+                parts = line.split(col_sep)
+                if len(parts) != 2:
+                    continue
+                contents.append(parts[0])
+                labels.append(parts[1])
+        return contents, labels
 
     def get_feature(self, query, is_word_segmented=False):
         """
@@ -487,55 +519,7 @@ class Feature:
             terms.append(text.term)
         return features, terms
 
-
-class WordRank(Feature):
-    def __init__(
-            self,
-            model_path=default_model_path,
-            stopwords_path=stopwords_path,
-            person_name_path=person_name_path,
-            place_name_path=place_name_path,
-            common_char_path=common_char_path,
-            segment_sep=' ',
-            ngram=4,
-            pmi_path=pmi_path,
-            entropy_path=entropy_path,
-    ):
-        super(WordRank, self).__init__(
-            stopwords_path=stopwords_path,
-            person_name_path=person_name_path,
-            place_name_path=place_name_path,
-            common_char_path=common_char_path,
-            segment_sep=segment_sep,
-            ngram=ngram,
-            pmi_path=pmi_path,
-            entropy_path=entropy_path,
-        )
-        self.segment_sep = segment_sep
-        self.model_path = model_path
-        self.model = None
-
-    @staticmethod
-    def data_reader(file_path, col_sep=','):
-        """
-        Load data
-        :param file_path:
-        :param col_sep:
-        :return: list, list: contents, labels
-        """
-        contents = []
-        labels = []
-        with open(file_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                line = line.rstrip()
-                parts = line.split(col_sep)
-                if len(parts) != 2:
-                    continue
-                contents.append(parts[0])
-                labels.append(parts[1])
-        return contents, labels
-
-    def train(self, train_file, col_sep, is_word_segmented=True):
+    def train(self, train_file, col_sep=',', is_word_segmented=True):
         # 1.read train data
         contents, labels = self.data_reader(train_file, col_sep)
         logger.info('contents size:%s, labels size:%s' % (len(contents), len(labels)))
@@ -553,7 +537,7 @@ class WordRank(Feature):
             features += content_features
         logger.info("[train]features size: %s, tags size: %s" % (len(features), len(tags)))
         assert len(features) == len(tags), "features size must equal tags size"
-        X_train, X_val, y_train, y_val = train_test_split(features, tags, test_size=0.2, random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(features, tags, test_size=0.1, random_state=0)
         logger.debug("train size:%s, val size:%s" % (len(y_train), len(y_val)))
         # 3.train classification model, save model file
         model = RandomForestClassifier(n_estimators=300)
@@ -608,7 +592,7 @@ class WordRank(Feature):
         term_weights = []
         text = convert_to_unicode(input_string)
         if len(text) == 1:
-            term_scores = zip([text], [0])
+            term_scores = zip([text], [0.0])
         else:
             # get feature
             data_feature, terms = self.get_feature(text, is_word_segmented=False)

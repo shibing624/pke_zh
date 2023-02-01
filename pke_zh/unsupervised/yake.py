@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-@author:XuMing(xuming624@qq.com), Florian Boudin
+@author:XuMing(xuming624@qq.com), Florian Boudin, Seon
 @description:
 
 YAKE(Yet Another Keyword Extractor)，一种基于关键词统计的单文档无监督关键词提取算法：
 基于5种指标：是否大写，词的位置，词频，上下文关系，词在句中频率，来计算候选词的得分，从而筛选Top-N关键词。
 中文只用后4个指标。
+关键词的基本过滤规则：1）候选短语限制最长三个词；2）候选短语不能是专名；3）候选短语开头和结尾不能是停用词
 
 YAKE keyphrase extraction model.
 
@@ -16,27 +17,14 @@ Statistical approach to keyphrase extraction described in:
   YAKE! Keyword extraction from single documents using multiple local features.
   *Information Sciences*, pages 257-289, 2020.
 
+modify from: https://pypi.org/project/iyake-cn/0.5.5/#files
+
 """
 
 import math
-import re
 from collections import defaultdict
 import numpy as np
-
 from pke_zh.base import BaseKeywordExtractModel
-
-
-def edit_distance(str1, str2):
-    try:
-        # very fast
-        # http://stackoverflow.com/questions/14260126/how-python-levenshtein-ratio-is-computed
-        import Levenshtein
-        d = Levenshtein.distance(str1, str2) / float(max(len(str1), len(str2)))
-    except:
-        from difflib import SequenceMatcher
-        # https://docs.python.org/2/library/difflib.html
-        d = 1. - SequenceMatcher(lambda x: x == " ", str1, str2).ratio()
-    return d
 
 
 class Yake(BaseKeywordExtractModel):
@@ -69,29 +57,22 @@ class Yake(BaseKeywordExtractModel):
         # select ngrams from 1 to 3 grams
         self.ngram_selection(n=n)
 
-        # filter candidates containing punctuation marks
-        self.candidate_filtering()
+        # filter candidates containing punctuation marks and stopwords
+        self.candidate_filtering(stoplist=self.stoplist)
 
         # further filter candidates
         for k in list(self.candidates):
             # get the candidate
             v = self.candidates[k]
 
-            # filter candidates starting/ending with a stopword or containing
-            # a first/last word with less than 3 characters
+            # filter candidates starting/ending with a stopword
             if v.surface_forms[0][0].lower() in self.stoplist or v.surface_forms[0][
-                -1].lower() in self.stoplist or len(
-                v.surface_forms[0][0]) < 3 or len(
-                v.surface_forms[0][-1]) < 3:
+                -1].lower() in self.stoplist:
                 del self.candidates[k]
 
-    def _vocabulary_building(self, use_stems=False):
+    def _vocabulary_building(self):
         """Build the vocabulary that will be used to weight candidates. Only
         words containing at least one alpha-numeric character are kept.
-
-        Args:
-            use_stems (bool): whether to use stems instead of lowercase words
-                for weighting, defaults to False.
         """
         # loop through sentences
         for i, sentence in enumerate(self.sentences):
@@ -99,16 +80,14 @@ class Yake(BaseKeywordExtractModel):
             shift = sum([s.length for s in self.sentences[0:i]])
             # loop through words in sentence
             for j, word in enumerate(sentence.words):
-                # consider words containing at least one alpha-numeric character
-                if self._is_alphanum(word) and not re.search('(?i)^-[lr][rcs]b-$', word):
-                    # get the word or stem
+                # consider words containing at least one character
+                if len(word) > 1:
+                    # get the word
                     index = word.lower()
-                    if use_stems:
-                        index = sentence.stems[j]
                     # add the word occurrence
                     self.words[index].add((shift + j, shift, i, word))
 
-    def _contexts_building(self, use_stems=False, window=2):
+    def _contexts_building(self, window=2):
         """Build the contexts of the words for computing the relatedness
         feature. Words that occur within a window of n words are considered as
         context words. Only words co-occurring in a block (sequence of words
@@ -124,9 +103,6 @@ class Yake(BaseKeywordExtractModel):
         for i, sentence in enumerate(self.sentences):
             # lowercase the words
             words = [w.lower() for w in sentence.words]
-            # replace with stems if needed
-            if use_stems:
-                words = sentence.stems
             # block container
             block = []
             # loop through words in sentence
@@ -198,9 +174,8 @@ class Yake(BaseKeywordExtractModel):
 
         # Loop through the words
         for word in self.words:
-
-            # Indicating whether the word is a stopword (vitordouzi change)
-            self.features[word]['isstop'] = word in self.stoplist or len(word) < 3
+            # Indicating whether the word is a stopwords
+            self.features[word]['isstop'] = word in self.stoplist
 
             # Term Frequency
             self.features[word]['TF'] = len(self.words[word])
@@ -214,18 +189,15 @@ class Yake(BaseKeywordExtractModel):
                 elif surface_form[0].isupper() and offset != shift:
                     self.features[word]['TF_U'] += 1
 
-            # 1. CASING feature
+            # 1. CASING feature, chinese text continue
             self.features[word]['CASING'] = max(self.features[word]['TF_A'],
                                                 self.features[word]['TF_U'])
-            self.features[word]['CASING'] /= 1.0 + math.log(
-                self.features[word]['TF'])
+            self.features[word]['CASING'] /= 1.0 + math.log(self.features[word]['TF'])
 
             # 2. POSITION feature
             sentence_ids = list(set([t[2] for t in self.words[word]]))
-            self.features[word]['POSITION'] = math.log(
-                3.0 + np.median(sentence_ids))
-            self.features[word]['POSITION'] = math.log(
-                self.features[word]['POSITION'])
+            self.features[word]['POSITION'] = math.log(3.0 + np.median(sentence_ids))
+            self.features[word]['POSITION'] = math.log(self.features[word]['POSITION'])
 
             # 3. FREQUENCY feature
             self.features[word]['FREQUENCY'] = self.features[word]['TF']
@@ -245,8 +217,6 @@ class Yake(BaseKeywordExtractModel):
             self.features[word]['PR'] = len(set(self.contexts[word][1])) / max_TF
 
             self.features[word]['RELATEDNESS'] = 1
-            # self.features[word]['RELATEDNESS'] += self.features[word]['PL']
-            # self.features[word]['RELATEDNESS'] += self.features[word]['PR']
             self.features[word]['RELATEDNESS'] += (self.features[word]['WR'] +
                                                    self.features[word]['WL']) * \
                                                   (self.features[word]['TF'] / max_TF)
@@ -270,12 +240,10 @@ class Yake(BaseKeywordExtractModel):
         self.features = defaultdict(dict)
         self.surface_to_lexical = {}
 
-    def candidate_weighting(self, window=2, use_stems=False):
+    def candidate_weighting(self, window=2):
         """Candidate weight calculation as described in the YAKE paper.
 
         Args:
-            use_stems (bool): whether to use stems instead of lowercase words
-                for weighting, defaults to False.
             window (int): the size in words of the window used for computing
                 co-occurrence counts, defaults to 2.
         """
@@ -283,61 +251,54 @@ class Yake(BaseKeywordExtractModel):
             return
 
         # build the vocabulary
-        self._vocabulary_building(use_stems=use_stems)
+        self._vocabulary_building()
 
         # extract the contexts
-        self._contexts_building(use_stems=use_stems, window=window)
+        self._contexts_building(window=window)
 
         # compute the word features
         self._feature_extraction()
 
         # compute candidate weights
         for k, v in self.candidates.items():
-            # use stems
-            if use_stems:
-                weights = [self.features[t]['weight'] for t in v.lexical_form]
-                self.weights[k] = np.prod(weights)
-                self.weights[k] /= len(v.offsets) * (1 + sum(weights))
-            # use words
-            else:
-                lowercase_forms = [' '.join(t).lower() for t in v.surface_forms]
-                for i, candidate in enumerate(lowercase_forms):
-                    TF = lowercase_forms.count(candidate)
+            lowercase_forms = [' '.join(t).lower() for t in v.surface_forms]
+            for i, candidate in enumerate(lowercase_forms):
+                TF = lowercase_forms.count(candidate)
 
-                    # computing differentiated weights for words and stopwords
-                    # (vitordouzi change)
-                    tokens = [t.lower() for t in v.surface_forms[i]]
-                    prod_ = 1.
-                    sum_ = 0.
-                    for j, token in enumerate(tokens):
-                        if self.features[token]['isstop']:
-                            term_stop = token
-                            prob_t1 = prob_t2 = 0
-                            if j - 1 >= 0:
-                                term_left = tokens[j - 1]
-                                prob_t1 = self.contexts[term_left][1].count(
-                                    term_stop) / self.features[term_left]['TF']
-                            if j + 1 < len(tokens):
-                                term_right = tokens[j + 1]
-                                prob_t2 = self.contexts[term_stop][0].count(
-                                    term_right) / self.features[term_right]['TF']
+                # computing differentiated weights for words and stopwords
+                tokens = [t.lower() for t in v.surface_forms[i]]
+                prod_ = 1.
+                sum_ = 0.
+                for j, token in enumerate(tokens):
+                    if self.features[token]['isstop']:
+                        term_stop = token
+                        prob_t1 = 0
+                        prob_t2 = 0
+                        if j - 1 >= 0:
+                            term_left = tokens[j - 1]
+                            prob_t1 = self.contexts[term_left][1].count(
+                                term_stop) / self.features[term_left]['TF']
+                        if j + 1 < len(tokens):
+                            term_right = tokens[j + 1]
+                            prob_t2 = self.contexts[term_stop][0].count(
+                                term_right) / self.features[term_right]['TF']
 
-                            prob = prob_t1 * prob_t2
-                            prod_ *= (1 + (1 - prob))
-                            sum_ -= (1 - prob)
-                        else:
-                            prod_ *= self.features[token]['weight']
-                            sum_ += self.features[token]['weight']
-                    if sum_ == -1:
-                        # The candidate is a one token stopword at the start or
-                        #  the end of the sentence
-                        # Setting sum_ to -1+eps so 1+sum_ != 0
-                        sum_ = -0.99999999999
-                    self.weights[candidate] = prod_
-                    self.weights[candidate] /= TF * (1 + sum_)
-                    self.surface_to_lexical[candidate] = k
+                        prob = prob_t1 * prob_t2
+                        prod_ *= (1 + (1 - prob))
+                        sum_ -= (1 - prob)
+                    else:
+                        prod_ *= self.features[token]['weight']
+                        sum_ += self.features[token]['weight']
+                if sum_ == -1:
+                    # The candidate is a one token stopword at the start or
+                    #  the end of the sentence
+                    # Setting sum_ to -1+eps so 1+sum_ != 0
+                    sum_ = -0.99999999999
+                self.weights[candidate] = prod_
+                self.weights[candidate] /= TF * (1 + sum_)
+                self.surface_to_lexical[candidate] = k
 
-    def is_redundant(self, candidate, prev, threshold=0.8):
+    def is_redundant(self, candidate, prev, threshold=0.6):
         """Test if one candidate is redundant with respect to a list of already
         selected candidates. A candidate is considered redundant if its
         levenshtein distance, with another candidate that is ranked higher in
@@ -347,13 +308,14 @@ class Yake(BaseKeywordExtractModel):
             candidate (str): the lexical form of the candidate.
             prev (list): the list of already selected candidates.
             threshold (float): the threshold used when computing the
-                levenshtein distance, defaults to 0.8.
+                    char sim score, defaults to 0.6.
         """
         # loop through the already selected candidates
         for prev_candidate in prev:
-            dist = edit_distance(candidate, prev_candidate)
-            dist /= max(len(candidate), len(prev_candidate))
-            if (1.0 - dist) > threshold:
+            s1 = set(prev_candidate)
+            s2 = set(candidate)
+            sim_score = len(s1 & s2) / min(len(s1), len(s2))
+            if sim_score >= threshold:
                 return True
         return False
 
@@ -361,8 +323,7 @@ class Yake(BaseKeywordExtractModel):
             self,
             n=10,
             redundancy_removal=True,
-            stemming=False,
-            threshold=0.8
+            threshold=0.6
     ):
         """ Returns the n-best candidates given the weights.
 
@@ -371,10 +332,8 @@ class Yake(BaseKeywordExtractModel):
                 redundancy_removal (bool): whether redundant keyphrases are
                     filtered out from the n-best list using levenshtein
                     distance, defaults to True.
-                stemming (bool): whether to extract stems or surface forms
-                    (lowercased, first occurring form of candidate), default to False.
                 threshold (float): the threshold used when computing the
-                    levenshtein distance, defaults to 0.8.
+                    char sim score, defaults to 0.6.
         """
         # sort candidates by ascending weight, change dict to key list
         best = sorted(self.weights, key=self.weights.get, reverse=True)
@@ -400,26 +359,19 @@ class Yake(BaseKeywordExtractModel):
 
         # get the list of best candidates as (lexical form, weight) tuples
         n_best = [(u.replace(' ', ''), self.weights[u]) for u in best[:min(n, len(best))]]
-        # replace with surface forms if no stemming
-        if stemming:
-            for i, (candidate, weight) in enumerate(n_best):
-                if candidate not in self.candidates:
-                    candidate = self.surface_to_lexical[candidate]
-                candidate = ' '.join(self.candidates[candidate].lexical_form)
-                n_best[i] = (candidate, weight)
         # return the list of best candidates
         return n_best
 
-    def extract(self, input_file_or_string, n_best=10, threshold=0.8, window=2, use_stems=False):
+    def extract(self, input_file_or_string, n_best=10, threshold=0.6, window=2):
         # load the content of the document.
         self.load_document(input=input_file_or_string, language='zh', normalization=None)
         self.clear_cache()
         # select {1-3}-grams not containing punctuation marks and not
-        #    beginning/ending with a stopword as candidates.
+        #    beginning/ending with a stop word as candidates.
         self.candidate_selection(n=3)
         # weight the candidates using YAKE weighting scheme, a window (in
         #    words) for computing left/right contexts can be specified.
-        self.candidate_weighting(window=window, use_stems=use_stems)
+        self.candidate_weighting(window=window)
         # Get the 10-highest scored candidates as keyphrases.
         #    redundant keyphrases are removed from the output using levenshtein
         #    distance and a threshold.
