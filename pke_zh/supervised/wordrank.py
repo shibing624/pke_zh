@@ -461,6 +461,9 @@ class WordRank:
         self.segment_sep = segment_sep
         self.model_path = model_path
         self.model = None
+        if self.model_path and os.path.exists(self.model_path):
+            self.model = load_pkl(self.model_path)
+            logger.debug('Loaded model: {}'.format(self.model_path))
 
     @staticmethod
     def data_reader(file_path, col_sep=','):
@@ -597,11 +600,6 @@ class WordRank:
             # get feature
             data_feature, terms = self.get_feature(text, is_word_segmented=False)
             # predict model
-            if self.model_path and os.path.exists(self.model_path):
-                self.model = load_pkl(self.model_path)
-                logger.debug('Loaded model: {}'.format(self.model_path))
-            else:
-                logger.error('model not found. path: {}'.format(self.model_path))
             label_pred = self.model.predict(data_feature)
             term_scores = zip(terms, label_pred)
         for w, p in term_scores:
