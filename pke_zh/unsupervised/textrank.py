@@ -14,7 +14,6 @@ Implementation of the TextRank model for keyword extraction described in:
 """
 
 import math
-from loguru import logger
 import networkx as nx
 
 from pke_zh.base import BaseKeywordExtractModel
@@ -46,8 +45,7 @@ class TextRank(BaseKeywordExtractModel):
 
     def candidate_selection(self, pos=None):
         """Candidate selection using longest sequences of PoS.
-        :param pos: set of valid POS tags, defaults to ('NOUN', 'PROPN',
-            'ADJ').
+        :param pos: set of valid POS tags, defaults to ('NOUN', 'ADJ').
         """
         if pos is None:
             pos = {'n', 'a'}
@@ -134,6 +132,7 @@ class TextRank(BaseKeywordExtractModel):
             # computing the number of top keywords
             nb_nodes = self.graph.number_of_nodes()
             to_keep = min(math.floor(nb_nodes * top_percent), nb_nodes)
+            to_keep = max(1, to_keep)
 
             # sorting the nodes by decreasing scores
             top_words = sorted(word_scores, key=word_scores.get, reverse=True)

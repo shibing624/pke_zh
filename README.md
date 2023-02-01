@@ -113,7 +113,7 @@ output:
 ## 无监督关键词提取
 支持TextRank、TfIdf、KeyBert等关键词提取算法。
 
-example：[examples/unsupervised_demo.py](examples/unsupervised_demo.py)
+example: [examples/unsupervised_demo.py](examples/unsupervised_demo.py)
 
 
 ```python
@@ -147,7 +147,7 @@ print('KeyBert_m:', r)
 
 output:
 ```shell
-TextRank: []
+TextRank: [('电视剧', 1.00000002)]
 TfIdf: [('哪里下载', 1.328307500322222), ('下载电视剧', 1.328307500322222), ('电视剧周恩来', 1.328307500322222)]
 PositionRank_m: [('电视剧', 1.0)]
 KeyBert_m: [('电视剧', 0.47165293)]
