@@ -82,14 +82,14 @@ python3 setup.py install
 ```
 
 ### 依赖数据
-* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，模型由pycorrector库自动下载于：~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm 。
-* 中文文本匹配模型[shibing624/text2vec-base-chinese](https://huggingface.co/shibing624/text2vec-base-chinese) ，模型由transformers库自动下载于：~/.cache/huggingface/transformers/ 下。
+* 千兆中文文本训练的语言模型[zh_giga.no_cna_cmn.prune01244.klm(2.8G)](https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm)，模型由pycorrector库自动下载于 `~/.pycorrector/datasets/zh_giga.no_cna_cmn.prune01244.klm` 。
+* 中文文本匹配模型[shibing624/text2vec-base-chinese](https://huggingface.co/shibing624/text2vec-base-chinese) ，模型由transformers库自动下载于 `~/.cache/huggingface/transformers/` 下。
 
 # Usage
 
 ## 有监督关键词提取
 
-直接调用训练好的WordRank模型，模型自动下载本地`~/.cache/pke_zh/wordrank_model.pkl`
+直接调用训练好的WordRank模型，模型自动下载于 `~/.cache/pke_zh/wordrank_model.pkl` 。
 
 example: [examples/keyphrase_extraction_demo.py](examples/keyphrase_extraction_demo.py)
 
