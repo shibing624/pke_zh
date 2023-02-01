@@ -57,6 +57,7 @@ setup(
         "scikit-learn",
         "scipy",
         "networkx",
+        "text2vec",
     ],
     packages=find_packages(exclude=['tests']),
     package_dir={'pke_zh': 'pke_zh'},

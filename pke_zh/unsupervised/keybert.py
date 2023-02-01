@@ -11,7 +11,7 @@ keybert关键词抽取，核心思想类似embedrank，
 from loguru import logger
 import itertools
 from sklearn.metrics.pairwise import cosine_similarity
-from sentence_transformers import SentenceTransformer
+from text2vec import SentenceModel
 import numpy as np
 from typing import List
 
@@ -184,27 +184,27 @@ def mmr_norm_ranking(doc_embedding: np.ndarray,
 
 
 class KeyBert(BaseKeywordExtractModel):
-    def __init__(self, model='sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'):
+    def __init__(self, model='shibing624/text2vec-base-chinese'):
         """
-            原文支持若干种embedding 方法：SentenceTransformers、Flair、Spacy、gensim
-            暂时只支持sentenceTransformers sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2模型，
-                支持包括中文、英文的若干种语言
-            sentence-transformers models:
+            原文支持若干种embedding 方法：SentenceModel、SentenceTransformers、Flair、Spacy、gensim
+            中文默认支持text2vec.SentenceModel model="shibing624/text2vec-base-chinese"模型，
+            英文可设置model="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"模型，
+            其他语言参考：sentence-transformers models:
                   * https://www.sbert.net/docs/pretrained_models.html
             """
         # param: model sentenceTransformers
         super(KeyBert, self).__init__()
         if isinstance(model, str):
             try:
-                self.model = SentenceTransformer(model)
+                self.model = SentenceModel(model)
             except Exception as e:
                 logger.error('wrong url for sentence model, change to default!')
-                self.model = SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')
-        elif isinstance(model, SentenceTransformer):
+                self.model = SentenceModel('shibing624/text2vec-base-chinese')
+        elif isinstance(model, SentenceModel):
             self.model = model
         else:
-            raise ValueError('model must be str or SentenceTransformer')
-        self.max_length = self.model.get_max_seq_length()
+            raise ValueError('model must be str or text2vec.SentenceModel')
+        self.max_length = self.model.max_seq_length
 
     def candidate_selection(self, pos=None):
         """Candidate selection using longest sequences of PoS.

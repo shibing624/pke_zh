@@ -459,11 +459,22 @@ class WordRank:
         )
         self.language_feature = LanguageFeature()
         self.segment_sep = segment_sep
-        self.model_path = model_path
         self.model = None
-        if self.model_path and os.path.exists(self.model_path):
-            self.model = load_pkl(self.model_path)
-            logger.debug('Loaded model: {}'.format(self.model_path))
+        if not os.path.exists(model_path):
+            # release 的模型
+            cache_folder = os.path.abspath(os.path.dirname(model_path))
+            file_name = 'wordrank_model.pkl'
+            get_file(
+                f'{file_name}',
+                f'https://github.com/shibing624/pke_zh/releases/download/0.2.2/{file_name}',
+                extract=False,
+                cache_subdir=cache_folder,
+                verbose=1)
+            model_path = os.path.join(cache_folder, f'{file_name}')
+        if model_path and os.path.exists(model_path):
+            self.model = load_pkl(model_path)
+            logger.debug('Loaded wordrank model: {}'.format(model_path))
+        self.model_path = model_path
 
     @staticmethod
     def data_reader(file_path, col_sep=','):
