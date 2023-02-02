@@ -24,6 +24,7 @@ modify from: https://pypi.org/project/iyake-cn/0.5.5/#files
 import math
 from collections import defaultdict
 import numpy as np
+from pke_zh.utils.text_utils import edit_distance
 from pke_zh.base import BaseKeywordExtractModel
 
 
@@ -312,9 +313,8 @@ class Yake(BaseKeywordExtractModel):
         """
         # loop through the already selected candidates
         for prev_candidate in prev:
-            s1 = set(prev_candidate)
-            s2 = set(candidate)
-            sim_score = len(s1 & s2) / min(len(s1), len(s2))
+            dist = edit_distance(prev_candidate, candidate)
+            sim_score = 1.0 - dist
             if sim_score >= threshold:
                 return True
         return False

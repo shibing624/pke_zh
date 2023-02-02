@@ -5,6 +5,7 @@
 """
 
 import six
+import numpy as np
 
 
 def convert_to_unicode(text):
@@ -60,3 +61,54 @@ def is_alphabet_string(string):
 def is_other(uchar):
     """判断是否非汉字，数字和英文字符"""
     return not (is_chinese(uchar) or is_number(uchar) or is_alphabet(uchar))
+
+
+def char_similarity(str1, str2):
+    if len(str1) <= 1 or len(str2) <= 1:
+        return 0
+    s1 = set(str1)
+    s2 = set(str2)
+    sim_score = len(s1 & s2) / max(len(s1), len(s2))
+    return sim_score
+
+
+def char_similarity2(str1, str2):
+    """
+    计算句子之间的相似度
+    公式: similarity = |A∩B| / (log(|A|) + log(|B|))
+
+    sim_score: float, 句子之间的相似度
+    """
+    if len(str1) <= 1 or len(str2) <= 1:
+        return 0
+    sim_score = len(set(str1) & set(str2)) / (np.log(len(str1)) + np.log(len(str2)))
+    return sim_score
+
+
+def edit_distance(str1, str2):
+    try:
+        # very fast
+        # http://stackoverflow.com/questions/14260126/how-python-levenshtein-ratio-is-computed
+        import Levenshtein
+        d = Levenshtein.distance(str1, str2) / float(max(len(str1), len(str2)))
+    except:
+        from difflib import SequenceMatcher
+        # https://docs.python.org/2/library/difflib.html
+        d = 1.0 - SequenceMatcher(lambda x: x == " ", str1, str2).ratio()
+    return d
+
+
+if __name__ == '__main__':
+    str1 = '好人一生啊'
+    str2 = '好人一生平安'
+    print(char_similarity(str1, str2))
+    print(char_similarity2(str1, str2))
+    print(edit_distance(str1, str2))
+    print('edit sim:', 1 - edit_distance(str1, str2))
+
+    str1 = '好人一生啊增加迭代轮次的同时增加迭代轮次前后的差值阈值'
+    str2 = '好人一生平安是这个道理'
+    print(char_similarity(str1, str2))
+    print(char_similarity2(str1, str2))
+    print(edit_distance(str1, str2))
+    print('edit sim:', 1 - edit_distance(str1, str2))
