@@ -9,7 +9,7 @@
 
 PKE_zh, Python Keyphrase Extraction for ZH(chinese).
 
-**pke_zh**实现了多种中文关键词提取算法，包括有监督的WordRank、无监督的TextRank, TfIdf, KeyBert, PositionRank, TopicRank等，扩展性强，开箱即用。
+**pke_zh**实现了多种中文关键词提取算法，包括有监督的WordRank，无监督的TextRank、TfIdf、KeyBert、PositionRank、TopicRank等，扩展性强，开箱即用。
 
 
 **Guide**
@@ -40,10 +40,10 @@ PKE_zh, Python Keyphrase Extraction for ZH(chinese).
 **特征方法**
 
 * 文本特征：包括Query长度、Term长度，Term在Query中的偏移量，term词性、长度信息、term数目、位置信息、句法依存tag、是否数字、是否英文、是否停用词、是否专名实体、是否重要行业词、embedding模长、删词差异度、以及短语生成树得到term权重等
-* 统计特征：包括PMI、IDF、textrank值、前后词互信息、左右邻熵、独立检索占比（term单独作为query的qv/所有包含term的query的qv和）、统计概率、idf变种iqf
+* 统计特征：包括PMI、IDF、TextRank值、前后词互信息、左右邻熵、独立检索占比（term单独作为query的qv/所有包含term的query的qv和）、统计概率、idf变种iqf
 * 语言模型特征：整个query的语言模型概率 / 去掉该Term后的Query的语言模型概率
 
-2. 模型方面采用树模型（XGBoost等）进行训练，得到权重分类模型后在线上预测
+2. 模型方面采用树模型（XGBoost等）进行训练，得到权重分类模型（WordRank）后在线上预测
 ![term-weighting](./docs/gbdt.png)
 
 #### 深度模型的解决思路
