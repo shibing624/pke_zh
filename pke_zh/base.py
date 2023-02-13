@@ -72,7 +72,7 @@ class BaseKeywordExtractModel(object):
         ]
         self.punctuations = list(punctuation) + punctuation_expand
 
-        self.sentence_delimiters = ['？', '?', '；', ';', '！', '!', '。', '……', '…', '\n']
+        self.sentence_delimiters = ['？', '?', '；', ';', '！', '!', '。', '……', '…', '\n', '，', ',']
 
         self.self_defined_keywords = []
         if self_defined_keyword_path is not None:
@@ -208,6 +208,7 @@ class BaseKeywordExtractModel(object):
         :param stemming: bool, whether to extract stems or surface forms
             (lowercased, first occurring form of candidate), default to
             False.
+        :return: list, the n-best candidates as (lexical form, weight) tuples.
         """
         # sort candidates by descending weight
         best = sorted(self.weights, key=self.weights.get, reverse=True)

@@ -156,7 +156,7 @@ class PositionRank(SingleRank):
         # loop through the candidates
         self.candidate_weight_norm(w, normalized)
 
-    def extract(self, input_file_or_string, n_best=10, pos=None):
+    def extract(self, input_file_or_string, n_best=10, pos=None, **kwargs):
         # 1. valid postags
         if pos is None:
             pos = {'n', 'a'}

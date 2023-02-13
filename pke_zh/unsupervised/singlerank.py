@@ -99,7 +99,7 @@ class SingleRank(TextRank):
         # loop through the candidates
         self.candidate_weight_calculate(w, normalized)
 
-    def extract(self, input_file_or_string, n_best=10, pos=None):
+    def extract(self, input_file_or_string, n_best=10, pos=None, **kwargs):
         self.load_document(input=input_file_or_string, language='zh', normalization=None)
         self.candidate_selection(pos=pos)
         self.candidate_weighting(window=10, pos=pos)

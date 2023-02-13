@@ -11,11 +11,15 @@ Implementation of the TextRank model for keyword extraction described in:
   TextRank: Bringing Order into Texts
   *In Proceedings of EMNLP*, 2004.
 
+Extract sentence references from:
+    https://github.com/skykiseki/textrank4ch/blob/ed6a295139ebd38ba494182f8c2634bedfafb14e/textrank4ch/utils.py
 """
 
+import re
 import math
 import networkx as nx
-
+import numpy as np
+from pke_zh.utils.text_utils import edit_distance
 from pke_zh.base import BaseKeywordExtractModel
 
 
@@ -151,7 +155,72 @@ class TextRank(BaseKeywordExtractModel):
             # use position to break ties
             self.weights[k] += (self.candidates[k].offsets[0] * 1e-8)
 
+    def extract_sentences(self, doc_string, n_best=10):
+        """Extract key sentences from a text.
+        :param doc_string: str, the input text.
+        :param n_best: int, the number of keysentences to return.
+        """
+        list_res = []
+        content = doc_string.replace(" ", "")
+
+        # split to sentences
+        pattern = '[{0}*]'.format('|'.join(self.sentence_delimiters))
+        sentences = [s for s in re.split(pattern, content) if len(s) > 0]
+        len_sentences = len(sentences)
+        # 初始化句子之间的无向权图, 整体为N*N的矩阵
+        graph = np.zeros((len_sentences, len_sentences))
+
+        # 计算权重, 权重由切词的相似度进行计算, 由于是无向的, a(ij) = a(ji)
+        for i in range(len_sentences):
+            for j in range(len_sentences):
+                sim_value = 1.0 - edit_distance(sentences[i], sentences[j])
+                graph[i, j] = sim_value
+                graph[j, i] = sim_value
+
+        # 构造无向权图
+        nx_graph = nx.from_numpy_matrix(graph)
+
+        # 默认的PR收敛时的参数
+        pr_alpha = 1
+        pr_max_iter = 200
+        pr_tol = 1e-6
+        pagerank_config = {'alpha': pr_alpha,
+                           'max_iter': pr_max_iter,
+                           'tol': pr_tol}
+        pr_values = None
+        # 计算PR值, 注意, 初始参数在计算PR值时可能不收敛, 这个时候可以
+        flag = True
+        while flag:
+            try:
+                # 开始计算PR值, 可能存在不收敛的情况
+                pr_values = nx.pagerank(nx_graph, **pagerank_config)
+                # 成功收敛则停止循环
+                flag = False
+            except Exception:
+                # 如果PR不收敛, 以提升迭代前后轮次之间的差值为策略，也提升迭代轮次
+                pr_tol *= 10
+                pr_max_iter += 100
+
+                pagerank_config = {'alpha': pr_alpha,
+                                   'max_iter': pr_max_iter,
+                                   'tol': pr_tol}
+
+        # pr_values: 一个dict, {index:pr, index:pr}
+        for idx, val in sorted(pr_values.items(), key=lambda x: x[1], reverse=True):
+            list_res.append({'sentence': sentences[idx],
+                             'weight': val,
+                             'index': idx})
+        keysentences = [(item['sentence'], item['weight']) for item in list_res][:n_best]
+        return keysentences
+
     def extract(self, input_file_or_string, n_best=10, pos=None, top_percent=0.33):
+        """Extract keyphrases from a text or a file.
+        :param input_file_or_string: str, the input text or file path.
+        :param n_best: int, the number of keyphrases to return.
+        :param pos: the set of valid pos for words to be considered as nodes
+            in the graph, defaults to ('NOUN', 'PROPN', 'ADJ').
+        :param top_percent: float, percentage of top vertices to keep for phrase generation.
+        """
         self.load_document(input=input_file_or_string,
                            language='zh',
                            normalization=None)
