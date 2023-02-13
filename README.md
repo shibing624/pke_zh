@@ -41,8 +41,7 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 邪御天娇 免费 阅读,3 1 1
 ```
 
-重要度label共分4级：
-
+**重要度label**共分4级：
 - Super important：3级，主要包括POI核心词，比如“方特、欢乐谷”
 - Required：2级，包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
 - Important：1级，包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
@@ -50,7 +49,7 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 
 上例中可见“温泉”在不同的query中重要度是不同的。
 
-分类模型可以是GBDT、LR、SVM、Xgboost等，这里以GBDT为例，GBDT模型（WordRank）的输入是特征向量，输出是重要度label:
+分类模型可以是GBDT、LR、SVM、Xgboost等，这里以GBDT为例，GBDT模型（WordRank）的输入是特征向量，输出是重要度label。
 
 ![term-weighting](./docs/gbdt.png)
 
@@ -72,12 +71,12 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 
 # Install
 * From pip:
-```shell
+```zsh
 pip install -U pke_zh
 ```
 
 * From source：
-```shell
+```zsh
 git clone https://github.com/shibing624/pke_zh.git
 cd pke_zh
 python setup.py install
