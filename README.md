@@ -51,20 +51,12 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 上例中可见“温泉”在不同的query中重要度是不同的。
 
 分类模型可以是GBDT、LR、SVM、Xgboost等，这里以GBDT为例，GBDT模型（WordRank）的输入是特征向量，输出是重要度label:
+
 ![term-weighting](./docs/gbdt.png)
 
 ### 深度模型的解决思路
-- 思路一：本质依然是把关键词提取任务转化为词重要度分类任务，利用深度模型学习term重要性，取代人工提取特征，模型端到端预测词重要度label，深度模型可以是TextCNN、Fasttext、Transformer等，也可以是BERT预训练模型，适用于分类任务的模型都行。分类任务实现参考：https://github.com/shibing624/pytextclassifier
-- 思路二：用Seq2Seq生成模型，基于输入query生成关键词或者摘要，生成模型可以是T5、Bart、Seq2Seq等，生成任务实现参考：https://github.com/shibing624/textgen
-
-
-#### 分类模型
-* TextCNN、FastText、BiLSTM...
-* BERT CLS + softmax 
-
-#### 生成模型
-* Seq2Seq 文本摘要模型
-* T5、Bart、GPT2...
+- 思路一：本质依然是把关键词提取任务转化为词重要度分类任务，利用深度模型学习term重要度，取代人工提取特征，模型端到端预测词重要度label，按重要度排序后挑出topK个词作为关键词。深度模型有TextCNN、Fasttext、Transformer、BERT等，适用于分类任务的模型都行。分类任务实现参考：https://github.com/shibing624/pytextclassifier
+- 思路二：用Seq2Seq生成模型，输入query，输出关键词或者摘要，生成模型可以是T5、Bart、Seq2Seq等，生成任务实现参考：https://github.com/shibing624/textgen
 
 ## 无监督方法
 - [x] TextRank
@@ -83,6 +75,7 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 ```shell
 pip install -U pke_zh
 ```
+
 * From source：
 ```shell
 git clone https://github.com/shibing624/pke_zh.git
@@ -120,7 +113,7 @@ output:
 
 
 ## 无监督关键词提取
-支持TextRank、TfIdf、KeyBert等关键词提取算法。
+支持TextRank、TfIdf、PositionRank、KeyBert等关键词提取算法。
 
 example: [examples/unsupervised_demo.py](examples/unsupervised_demo.py)
 
