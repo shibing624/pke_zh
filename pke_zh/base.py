@@ -65,10 +65,14 @@ class BaseKeywordExtractModel(object):
 
         self.valid_pos = {'n', 'a'} if valid_pos is None else valid_pos
 
-        punctuation_expand = ['/', ',', '$', '%', '^', '*', '(', '+', '"', "'", ']', '+', '|', '[', '+', '——', '！',
-                              '，', '、', '~', '@', '#', '￥', '%', '&', '*', '（', '）', '：', '；', '《', '）', '《',
-                              '》', '“', '”', '(', ')', '»', '〔', '〕', '-']
+        punctuation_expand = [
+            '/', ',', '$', '%', '^', '*', '(', '+', '"', "'", ']', '+', '|', '[', '+', '——', '！',
+            '，', '、', '~', '@', '#', '￥', '%', '&', '*', '（', '）', '：', '；', '《', '）', '《',
+            '》', '“', '”', '(', ')', '»', '〔', '〕', '-'
+        ]
         self.punctuations = list(punctuation) + punctuation_expand
+
+        self.sentence_delimiters = ['？', '?', '；', ';', '！', '!', '。', '……', '…', '\n']
 
         self.self_defined_keywords = []
         if self_defined_keyword_path is not None:
@@ -89,8 +93,8 @@ class BaseKeywordExtractModel(object):
         """Loads the content of a document/string/stream in a given language.
 
         :param input: str, input.
-        :param language: str, language of the input, defaults to 'en'.
-        :param encoding: str, encoding of the raw file.
+        :param language: str, language of the input, defaults to 'zh'.
+        :param encoding: str, encoding of the raw file, defaults to 'utf-8'.
         :param normalization: str, word normalization method, defaults to
             'stemming'. Other possible values are 'lemmatization' or 'None'
             for using word surface forms instead of stems/lemmas.
@@ -412,7 +416,7 @@ class BaseKeywordExtractModel(object):
 
     def self_defined_keyword_matching(self):
         """
-
+        Match custom keywords
         :param docs: list of doc texts to be extracted
         :param keywords: self-defined keyword set
         :return:

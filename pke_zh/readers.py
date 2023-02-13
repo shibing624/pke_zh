@@ -49,6 +49,7 @@ def flatten_tuples(tuple_list):
 
 def fetch_nested_list_elements(nested_list, idx):
     """
+    Fetch target elements from nested list
     :param nested_list: list of list, each list is a tuple
     :param idx: target index in a tuple
     :return: list of list, each list contains target elements
@@ -58,6 +59,10 @@ def fetch_nested_list_elements(nested_list, idx):
 
 
 def reduce_charoffset(list_str):
+    """
+    Reduce char offset
+    :param list_str: list of string
+    """
     len_list = [len(x) for x in list_str]
     cur_sum = 0
     res = [0]
@@ -69,6 +74,10 @@ def reduce_charoffset(list_str):
 
 
 def cut_sent(para):
+    """
+    Split paragraph into sentences
+    :param para: paragraph
+    """
     para = re.sub('([。！？\?;；])([^”’])', r"\1\n\2", para)
     para = re.sub('(\.{6})([^”’])', r"\1\n\2", para)
     para = re.sub('(\…{2})([^”’])', r"\1\n\2", para)
@@ -112,12 +121,14 @@ class ChineseNLP(object):
         return result
 
     def sentence_pseg(self, sentences):
+        """Segment sentences into words and POS tags."""
         results = [[(s.word, s.flag) for s in pseg.cut(sent)] for sent in sentences]
         words = fetch_nested_list_elements(results, 0)
         postags = fetch_nested_list_elements(results, 1)
         return results, words, postags
 
     def clean(self, text):
+        """Clean text."""
         text = re.sub(r'img[_\d]+', '', text.strip())
         text = re.sub(r'_SEG_', '', text.strip())
         return text
@@ -140,7 +151,7 @@ class RawTextReader(Reader):
 
         self.language = language
         if self.language != 'zh':
-            logger.warning('toolkit is created for zh language!')
+            logger.warning('toolkit is built for zh language')
         self.nlp = ChineseNLP()
 
     def read(self, text, **kwargs):

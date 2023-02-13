@@ -76,6 +76,7 @@ class Candidate(object):
 
 
 def parse_sentence(sent_obj):
+    """Parse a sentence."""
     s = Sentence(words=sent_obj['words'])
 
     # add the POS

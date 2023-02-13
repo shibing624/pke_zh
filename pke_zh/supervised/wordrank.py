@@ -15,7 +15,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 
-from pke_zh import USER_DATA_DIR
 from pke_zh.utils.io_utils import load_pkl, save_pkl, save_json, load_json
 from pke_zh.utils.text_utils import convert_to_unicode, is_number_string, is_alphabet_string, is_chinese_string
 from pke_zh.utils.tokenizer import word_segment
@@ -33,6 +32,9 @@ common_char_path = os.path.join(pwd_path, '../data/common_char_set.txt')
 pmi_path = os.path.join(pwd_path, '../data/pmi_word_score.json')
 entropy_path = os.path.join(pwd_path, '../data/entropy_word_score.json')
 
+# user data dir used for supervised model
+USER_DATA_DIR = os.path.expanduser('~/.cache/pke_zh/')
+os.makedirs(USER_DATA_DIR, exist_ok=True)
 # word rank model path
 default_model_path = os.path.join(USER_DATA_DIR, 'wordrank_model.pkl')
 
@@ -437,7 +439,8 @@ class WordRank:
             pmi_path=pmi_path,
             entropy_path=entropy_path,
     ):
-        """ init word rank model
+        """
+        Init word rank model
 
         Args:
             model_path (str): the path to load the model in pickle format,
@@ -534,10 +537,16 @@ class WordRank:
         return features, terms
 
     def train(self, train_file, col_sep=',', is_word_segmented=True):
+        """
+        Train word rank model
+        :param train_file: train file path
+        :param col_sep: column separator
+        :param is_word_segmented: bool, is word segmented or not
+        """
         # 1.read train data
         contents, labels = self.data_reader(train_file, col_sep)
         logger.info('contents size:%s, labels size:%s' % (len(contents), len(labels)))
-
+        # 2.get feature
         features = []
         tags = []
         for content, label in zip(contents, labels):
@@ -569,6 +578,12 @@ class WordRank:
         return model
 
     def predict(self, query, is_word_segmented=False):
+        """
+        Predict query
+        :param query: input query
+        :param is_word_segmented: bool, is word segmented or not
+        :return: list, predict label
+        """
         logger.info('model predict')
         features, terms = self.get_feature(query, is_word_segmented=is_word_segmented)
         # predict classification model
@@ -585,6 +600,13 @@ class WordRank:
 
     @staticmethod
     def evaluate(model, test_data, test_label, pred_save_path=None):
+        """
+        Evaluate model
+        :param model: classification model
+        :param test_data: test data
+        :param test_label: test label
+        :param pred_save_path: predict result save path
+        """
         print('{0}, val mean acc:{1}'.format(model.__str__(), model.score(test_data, test_label)))
         # multi
         label_pred = model.predict(test_data)
@@ -601,7 +623,7 @@ class WordRank:
         Extract keywords from text
         :param input_string:
         :param n_best:
-        :return:
+        :return: list of keywords
         """
         term_weights = []
         text = convert_to_unicode(input_string)
