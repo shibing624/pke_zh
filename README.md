@@ -25,39 +25,48 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 如何提取query或者文档的关键词？
 
 
-### 有监督方法
-#### 特征工程的解决思路
-1. 实现时采用模型打分方法，以搜索query为原始语料，人工标注句子中各词重要度
+## 有监督方法
+### 特征工程的解决思路
+把关键词提取任务转化为分类任务，对输入query句子分词并提取多种特征，再把特征喂给机器学习模型，模型区分出各词的重要性得分，这样挑出topK个词作为关键词。
 
-> 重要度共分4级：
-> * Super important：主要包括POI核心词，比如“方特、欢乐谷”
-> * Required：包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
-> * Important：包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
-> * Unimportant：包括语气词、代词、泛需求词、停用词等
-
-上例中可见“温泉”在不同的query中重要度是不同的。
-
-**特征方法**
+#### 特征工程
 
 * 文本特征：包括Query长度、Term长度，Term在Query中的偏移量，term词性、长度信息、term数目、位置信息、句法依存tag、是否数字、是否英文、是否停用词、是否专名实体、是否重要行业词、embedding模长、删词差异度、以及短语生成树得到term权重等
 * 统计特征：包括PMI、IDF、TextRank值、前后词互信息、左右邻熵、独立检索占比（term单独作为query的qv/所有包含term的query的qv和）、统计概率、idf变种iqf
 * 语言模型特征：整个query的语言模型概率 / 去掉该Term后的Query的语言模型概率
 
-2. 模型方面采用树模型（XGBoost等）进行训练，得到权重分类模型（WordRank）后在线上预测
+
+训练样本形如：
+```shell
+邪御天娇 免费 阅读,3 1 1
+```
+
+重要度label共分4级：
+
+- Super important：3级，主要包括POI核心词，比如“方特、欢乐谷”
+- Required：2级，包括行政区词、品类词等，比如“北京 温泉”中“北京”和“温泉”都很重要
+- Important：1级，包括品类词、门票等，比如“顺景 温泉”中“温泉”相对没有那么重要，用户搜“顺景”大部分都是温泉的需求
+- Unimportant：0级，包括语气词、代词、泛需求词、停用词等
+
+上例中可见“温泉”在不同的query中重要度是不同的。
+
+分类模型可以是GBDT、LR、SVM、Xgboost等，这里以GBDT为例，GBDT模型（WordRank）的输入是特征向量，输出是重要度label:
 ![term-weighting](./docs/gbdt.png)
 
-#### 深度模型的解决思路
-* 利用深度学习模型来学习term重要性，比如通过训练基于BiLSTM+Attention的query意图分类模型
-* 基于Seq2Seq/Transformer训练的query翻译改写模型得到的attention权重副产物再结合其他策略或作为上述分类回归模型的特征也可以用于衡量term的重要性
-* 利用BERT模型训练端到端的词分级模型，类似序列标注模型，后接CRF判定词重要性权重输出
+### 深度模型的解决思路
+- 思路一：本质依然是把关键词提取任务转化为词重要度分类任务，利用深度模型学习term重要性，取代人工提取特征，模型端到端预测词重要度label，深度模型可以是TextCNN、Fasttext、Transformer等，也可以是BERT预训练模型，适用于分类任务的模型都行。分类任务实现参考：https://github.com/shibing624/pytextclassifier
+- 思路二：用Seq2Seq生成模型，基于输入query生成关键词或者摘要，生成模型可以是T5、Bart、Seq2Seq等，生成任务实现参考：https://github.com/shibing624/textgen
 
 
-**深度模型**
-
+#### 分类模型
+* TextCNN、FastText、BiLSTM...
 * BERT CLS + softmax 
-* Seq2Seq 文本摘要模型
 
-### 无监督方法
+#### 生成模型
+* Seq2Seq 文本摘要模型
+* T5、Bart、GPT2...
+
+## 无监督方法
 - [x] TextRank
 - [x] TfIdf
 - [x] SingleRank
@@ -72,13 +81,13 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 # Install
 * From pip:
 ```shell
-pip3 install -U pke_zh
+pip install -U pke_zh
 ```
 * From source：
 ```shell
 git clone https://github.com/shibing624/pke_zh.git
 cd pke_zh
-python3 setup.py install
+python setup.py install
 ```
 
 ### 依赖数据
@@ -153,6 +162,24 @@ PositionRank_m: [('电视剧', 1.0)]
 KeyBert_m: [('电视剧', 0.47165293)]
 ```
 
+### 无监督关键句提取（自动摘要）
+支持TextRank摘要提取算法。
+
+example: [examples/keysentences_extraction_demo.py](examples/keysentences_extraction_demo.py)
+
+
+```python
+from pke_zh.unsupervised.textrank import TextRank
+
+m = TextRank()
+r = m.extract_sentences("较早进入中国市场的星巴克，是不少小资钟情的品牌。相比 在美国的平民形象，星巴克在中国就显得“高端”得多。用料并无差别的一杯中杯美式咖啡，在美国仅约合人民币12元，国内要卖21元，相当于贵了75%。  第一财经日报")
+print(r)
+```
+
+output:
+```shell
+[('相比在美国的平民形象', 0.13208935993025409), ('在美国仅约合人民币12元', 0.1320761453200497), ('星巴克在中国就显得“高端”得多', 0.12497451534612379), ('国内要卖21元', 0.11929080110899569) ...]
+```
 
 # Contact
 
