@@ -58,16 +58,23 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 - 思路二：用Seq2Seq生成模型，输入query，输出关键词或者摘要，生成模型可以是T5、Bart、Seq2Seq等，生成任务实现参考：https://github.com/shibing624/textgen
 
 ## 无监督方法
-- [x] TextRank
-- [x] TfIdf
-- [x] SingleRank
-- [x] PositionRank
-- [x] TopicRank
-- [x] MultipartiteRank
-- [x] Yake
-- [x] KeyBert
+- 统计算法
+- [x] TFIDF，是很强的baseline，有较强普适性，基本能应付大部分关键词抽取场景，简单有效，速度很快，效果一般
+- [x] YAKE，人工总结规则的方法，不依赖外部语料，从单文档提取关键词，速度很快，效果差
+- 图算法
+- [x] TextRank，简单套用PageRank思想到关键词提取的方法，效果不比TFIDF强，而且涉及网络构建和随机游走迭代，速度慢，效果一般
+- [x] SingleRank，类似TextRank，是PageRank的变体，可以提取出关键短语，速度快，效果一般
+- [x] TopicRank，基于主题模型的关键词提取算法，考虑了文档中词语的语义关系，可以提取出与文档主题相关的关键词，速度慢，效果一般
+- [x] MultipartiteRank，一种基于多元关系的关键词提取算法，在TopicRank的基础上，考虑了词语的语义关系和词语位置，速度慢，效果一般
+- [x] PositionRank，是基于PageRank的图关系计算词权重，考虑了词位置和词频，速度一般，效果好
+- 语义模型
+- [x] KeyBERT，利用了预训练语言模型的能力来提取关键词，速度很慢，效果最好
 
+**模型选型**
+- 要求速度快，选择TFIDF、YAKE、PositionRank
+- 要求效果好，选择KeyBERT
 
+无监督算法介绍见文章[中文关键词提取算法](http://t.csdn.cn/6NO24)
 
 # Install
 * From pip:

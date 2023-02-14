@@ -5,7 +5,7 @@
 
 refer: https://maartengr.github.io/KeyBERT/guides/quickstart.html
 keybert关键词抽取，核心思想类似embedrank，
-    只是向量提取的度量方法使用keyBERT
+    只是句子向量提取的方法使用Sentence-BERT
 """
 
 from loguru import logger
