@@ -75,7 +75,3 @@ class TestCase(unittest.TestCase):
         for s in sents:
             r = m.extract(s)
             print(s, r)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -41,7 +41,3 @@ class TestCase(unittest.TestCase):
             self.assertTrue(r > 0)
             e = pmi_model.entropy_score(i)
             print(f"entropy_score {i}: {e}")
-
-
-if __name__ == '__main__':
-    unittest.main()

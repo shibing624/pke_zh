@@ -30,7 +30,3 @@ class TextRankTestCase(unittest.TestCase):
         for s in sents:
             r = m.extract_sentences(s)
             print(s, r)
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -52,7 +52,3 @@ class QPSPredictTestCase(unittest.TestCase):
         print('sente size:', len(sents))
         print('spend time:', spend_time, ' seconds')
         print('rank qps:', len(sents) / spend_time)
-
-
-if __name__ == '__main__':
-    unittest.main()
