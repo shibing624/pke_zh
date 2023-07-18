@@ -8,7 +8,7 @@ import argparse
 import sys
 
 sys.path.append('..')
-from pke_zh.supervised.wordrank import WordRank
+from pke_zh.wordrank import WordRank
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

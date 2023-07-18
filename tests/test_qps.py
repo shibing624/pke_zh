@@ -9,7 +9,7 @@ import unittest
 from time import time
 
 sys.path.append('..')
-from pke_zh.supervised.wordrank import WordRank
+from pke_zh.wordrank import WordRank
 
 text = """
 钟声文章啥意思

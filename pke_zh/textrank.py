@@ -160,6 +160,9 @@ class TextRank(BaseKeywordExtractModel):
         :param doc_string: str, the input text.
         :param n_best: int, the number of keysentences to return.
         """
+        keysentences = []
+        if not doc_string:
+            return keysentences
         list_res = []
         content = doc_string.replace(" ", "")
 
@@ -221,6 +224,9 @@ class TextRank(BaseKeywordExtractModel):
             in the graph, defaults to ('NOUN', 'PROPN', 'ADJ').
         :param top_percent: float, percentage of top vertices to keep for phrase generation.
         """
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         self.load_document(input=input_file_or_string,
                            language='zh',
                            normalization=None)

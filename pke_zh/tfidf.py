@@ -64,8 +64,13 @@ class TfIdf(BaseKeywordExtractModel):
             self.weights[k] = len(v.surface_forms) / total * self.idf_freq.get(k, self.median_idf)
 
     def extract(self, input_file_or_string, n_best=10, pos=None):
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         self.load_document(input=input_file_or_string, language='zh')
         self.candidate_selection(n=3)
+        if not self.candidates:
+            return keyphrases
         self.candidate_weighting()
         keyphrases = self.get_n_best(n=n_best, redundancy_removal=True)
         return keyphrases

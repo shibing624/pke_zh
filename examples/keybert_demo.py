@@ -6,10 +6,9 @@
 import sys
 
 sys.path.append("..")
-from pke_zh.wordrank import WordRank
+from pke_zh.keybert import KeyBert
 
-m = WordRank()
-
+m = KeyBert()
 sents = [
     "哪里下载电视剧周恩来？",
     "物流很快，服务也很好，还有售后回馈。外观很时尚并且超大视野",

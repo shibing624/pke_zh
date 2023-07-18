@@ -8,7 +8,7 @@ import sys
 import unittest
 
 sys.path.append('..')
-from pke_zh.supervised.wordrank import PMI
+from pke_zh.wordrank import PMI
 
 
 class TestCase(unittest.TestCase):

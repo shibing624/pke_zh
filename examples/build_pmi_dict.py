@@ -8,7 +8,7 @@ import sys
 import os
 
 sys.path.append('..')
-from pke_zh.supervised.wordrank import PMI
+from pke_zh.wordrank import PMI
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 

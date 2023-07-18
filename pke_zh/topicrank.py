@@ -206,11 +206,16 @@ class TopicRank(BaseKeywordExtractModel):
                 self.weights[topic[first]] = w[i]
 
     def extract(self, input_file_or_string, n_best=10, pos=None):
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         if pos is None:
             pos = {'n', 'a'}
         self.load_document(input=input_file_or_string, language='zh')
         self.clear_cache()
         self.candidate_selection(pos=pos)
+        if not self.candidates:
+            return keyphrases
         self.candidate_weighting(threshold=0.74, method='average')
         # get the 10-highest scored candidates as keyphrases
         keyphrases = self.get_n_best(n=n_best)

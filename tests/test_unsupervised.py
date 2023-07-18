@@ -8,14 +8,15 @@ import sys
 import unittest
 
 sys.path.append('..')
-from pke_zh.unsupervised.textrank import TextRank
-from pke_zh.unsupervised.tfidf import TfIdf
-from pke_zh.unsupervised.singlerank import SingleRank
-from pke_zh.unsupervised.positionrank import PositionRank
-from pke_zh.unsupervised.topicrank import TopicRank
-from pke_zh.unsupervised.multipartiterank import MultipartiteRank
-from pke_zh.unsupervised.yake import Yake
-from pke_zh.unsupervised.keybert import KeyBert
+from pke_zh.textrank import TextRank
+from pke_zh.tfidf import TfIdf
+from pke_zh.singlerank import SingleRank
+from pke_zh.positionrank import PositionRank
+from pke_zh.topicrank import TopicRank
+from pke_zh.multipartiterank import MultipartiteRank
+from pke_zh.yake import Yake
+from pke_zh.yake_zh import YakeZH
+from pke_zh.keybert import KeyBert
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 sents = [
@@ -23,7 +24,10 @@ sents = [
     '哪里下载电视剧潜伏',
     '一架飞机要起飞了',
     "天安门上太阳升，太阳升起，我们怎么去天安门",
-    "洗烘一体得价格算亲民了，特意挑选了一件小孩的裤子洗，洗的很干净，声音很小，容量很大。超爱！！"
+    "洗烘一体得价格算亲民了，特意挑选了一件小孩的裤子洗，洗的很干净，声音很小，容量很大。超爱！！",
+    "今天吃什么",
+    "",
+    "-",
 ]
 
 
@@ -66,6 +70,11 @@ class TestCase(unittest.TestCase):
 
     def test_Yake(self):
         m = Yake()
+        for s in sents:
+            r = m.extract(s)
+            print(s, r)
+
+        m = YakeZH()
         for s in sents:
             r = m.extract(s)
             print(s, r)

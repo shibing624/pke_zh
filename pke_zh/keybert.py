@@ -8,21 +8,24 @@ keybert关键词抽取，核心思想类似embedrank，
     只是句子向量提取的方法使用Sentence-BERT
 """
 
-from loguru import logger
 import itertools
+from typing import List
+
+import numpy as np
+from loguru import logger
 from sklearn.metrics.pairwise import cosine_similarity
 from text2vec import SentenceModel
-import numpy as np
-from typing import List
 
 from pke_zh.base import BaseKeywordExtractModel
 
 
-def max_sum_ranking(doc_embedding: np.ndarray,
-                    can_embeddings: np.ndarray,
-                    can_names: List[str],
-                    top_n: int,
-                    nr_candidates: int):
+def max_sum_ranking(
+        doc_embedding: np.ndarray,
+        can_embeddings: np.ndarray,
+        can_names: List[str],
+        top_n: int,
+        nr_candidates: int
+):
     """ Calculate Max Sum Distance for extraction of keywords
         We take the 2 x top_n most similar words/phrases to the document.
         Then, we take all top_n combinations from the 2 x top_n words and
@@ -40,7 +43,11 @@ def max_sum_ranking(doc_embedding: np.ndarray,
              List[Tuple[str, float]]: The selected keywords/keyphrases with their distances
         """
     # calculate distances and extract words
-    # print(doc_embedding)
+    if len(doc_embedding.shape) == 1:
+        doc_embedding = doc_embedding.reshape(1, -1)
+    if len(can_embeddings.shape) == 1:
+        can_embeddings = can_embeddings.reshape(1, -1)
+
     distances = cosine_similarity(doc_embedding, can_embeddings)
     distance_words = cosine_similarity(can_embeddings)
 
@@ -50,7 +57,7 @@ def max_sum_ranking(doc_embedding: np.ndarray,
     can_name_filter = [can_names[i] for i in can_idx]
     cand_distance = distance_words[np.ix_(can_idx, can_idx)]
 
-    # Calculate the 候选词里的topn of words的组合， that are the least similar to each other
+    # Calculate the topn of words, that are the least similar to each other
     min_sim = 100000
     final_candidate = None
     # print(can_idx)
@@ -68,11 +75,13 @@ def max_sum_ranking(doc_embedding: np.ndarray,
     return result
 
 
-def mmr_ranking(doc_embedding: np.ndarray,
-                can_embeddings: np.ndarray,
-                can_names: List[str],
-                top_n: int,
-                alpha: float = 0.5):
+def mmr_ranking(
+        doc_embedding: np.ndarray,
+        can_embeddings: np.ndarray,
+        can_names: List[str],
+        top_n: int,
+        alpha: float = 0.5
+):
     """ Calculate Maximal Marginal Relevance (MMR)
     between candidate keywords and the document.
     MMR considers the similarity of keywords/keyphrases with the
@@ -118,11 +127,13 @@ def mmr_ranking(doc_embedding: np.ndarray,
     return result
 
 
-def mmr_norm_ranking(doc_embedding: np.ndarray,
-                     can_embeddings: np.ndarray,
-                     can_names: List[str],
-                     top_n: int,
-                     alpha: float = 0.5):
+def mmr_norm_ranking(
+        doc_embedding: np.ndarray,
+        can_embeddings: np.ndarray,
+        can_names: List[str],
+        top_n: int,
+        alpha: float = 0.5
+):
     """Rank candidates according to a query
 
     :param document: np.array, dense representation of document (query)
@@ -186,19 +197,19 @@ def mmr_norm_ranking(doc_embedding: np.ndarray,
 class KeyBert(BaseKeywordExtractModel):
     def __init__(self, model='shibing624/text2vec-base-chinese'):
         """
-            原文支持若干种embedding 方法：SentenceModel、SentenceTransformers、Flair、Spacy、gensim
-            中文默认支持text2vec.SentenceModel model="shibing624/text2vec-base-chinese"模型，
-            英文可设置model="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"模型，
+        model:
+            支持若干种embedding 方法：SentenceModel、SentenceTransformers、Flair、Spacy、gensim
+            中文默认使用text2vec.SentenceModel model="shibing624/text2vec-base-chinese"模型，
+            英文可设置model="shibing624/text2vec-base-multilingual"模型，
             其他语言参考：sentence-transformers models:
                   * https://www.sbert.net/docs/pretrained_models.html
-            """
-        # param: model sentenceTransformers
+        """
         super(KeyBert, self).__init__()
         if isinstance(model, str):
             try:
                 self.model = SentenceModel(model)
             except Exception as e:
-                logger.error('wrong url for sentence model, change to default!')
+                logger.warning(f'wrong url for sentence model, change to default! {e}')
                 self.model = SentenceModel('shibing624/text2vec-base-chinese')
         elif isinstance(model, SentenceModel):
             self.model = model
@@ -272,7 +283,7 @@ class KeyBert(BaseKeywordExtractModel):
         doc_embed = np.average(doc_embed, axis=0)  # 取平均
         doc_embed = np.expand_dims(doc_embed, axis=0)  # 增加一个维度
 
-        cand_name = list(self.candidates.keys())  # 记得是带空格的
+        cand_name = list(self.candidates.keys())
         cand_embed = self.model.encode(cand_name)
 
         if use_mmr:
@@ -298,9 +309,14 @@ class KeyBert(BaseKeywordExtractModel):
         :return: keywords list
         """
         # 1. load the content of the document.
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         self.load_document(input=input_file_or_string, language='zh', normalization=None)
         # 2. select sequences of nouns and adjectives as candidates.
         self.candidate_selection()
+        if not self.candidates:
+            return keyphrases
         # 3. weight the candidates using EmbedRank method
         self.candidate_weighting(use_maxsum, use_mmr, n_best, alpha, nr_candidates)
         # 4. get the 10-highest scored candidates as keyphrases

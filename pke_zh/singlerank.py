@@ -13,7 +13,7 @@ Simple extension of the TextRank model described in:
   *In proceedings of the COLING*, pages 969-976, 2008.
 """
 import networkx as nx
-from pke_zh.unsupervised.textrank import TextRank
+from pke_zh.textrank import TextRank
 
 
 class SingleRank(TextRank):
@@ -100,8 +100,13 @@ class SingleRank(TextRank):
         self.candidate_weight_calculate(w, normalized)
 
     def extract(self, input_file_or_string, n_best=10, pos=None, **kwargs):
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         self.load_document(input=input_file_or_string, language='zh', normalization=None)
         self.candidate_selection(pos=pos)
+        if not self.candidates:
+            return keyphrases
         self.candidate_weighting(window=10, pos=pos)
         keyphrases = self.get_n_best(n=n_best)
         return keyphrases

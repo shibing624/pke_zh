@@ -6,14 +6,14 @@
 import sys
 
 sys.path.append("..")
-from pke_zh.unsupervised.textrank import TextRank
-from pke_zh.unsupervised.tfidf import TfIdf
-from pke_zh.unsupervised.singlerank import SingleRank
-from pke_zh.unsupervised.positionrank import PositionRank
-from pke_zh.unsupervised.topicrank import TopicRank
-from pke_zh.unsupervised.multipartiterank import MultipartiteRank
-from pke_zh.unsupervised.yake import Yake
-from pke_zh.unsupervised.keybert import KeyBert
+from pke_zh.textrank import TextRank
+from pke_zh.tfidf import TfIdf
+from pke_zh.singlerank import SingleRank
+from pke_zh.positionrank import PositionRank
+from pke_zh.topicrank import TopicRank
+from pke_zh.multipartiterank import MultipartiteRank
+from pke_zh.yake import Yake
+from pke_zh.keybert import KeyBert
 
 if __name__ == '__main__':
     sents = [

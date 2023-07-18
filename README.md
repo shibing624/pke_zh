@@ -102,7 +102,7 @@ python setup.py install
 example: [examples/keyphrase_extraction_demo.py](examples/keyphrase_extraction_demo.py)
 
 ```python
-from pke_zh.supervised.wordrank import WordRank
+from pke_zh.wordrank import WordRank
 m = WordRank()
 print(m.extract("哪里下载电视剧周恩来？"))
 ```
@@ -125,14 +125,14 @@ example: [examples/unsupervised_demo.py](examples/unsupervised_demo.py)
 
 
 ```python
-from pke_zh.unsupervised.textrank import TextRank
-from pke_zh.unsupervised.tfidf import TfIdf
-from pke_zh.unsupervised.singlerank import SingleRank
-from pke_zh.unsupervised.positionrank import PositionRank
-from pke_zh.unsupervised.topicrank import TopicRank
-from pke_zh.unsupervised.multipartiterank import MultipartiteRank
-from pke_zh.unsupervised.yake import Yake
-from pke_zh.unsupervised.keybert import KeyBert
+from pke_zh.textrank import TextRank
+from pke_zh.tfidf import TfIdf
+from pke_zh.singlerank import SingleRank
+from pke_zh.positionrank import PositionRank
+from pke_zh.topicrank import TopicRank
+from pke_zh.multipartiterank import MultipartiteRank
+from pke_zh.yake import Yake
+from pke_zh.keybert import KeyBert
 
 q = '哪里下载电视剧周恩来？'
 TextRank_m = TextRank()
@@ -168,7 +168,7 @@ example: [examples/keysentences_extraction_demo.py](examples/keysentences_extrac
 
 
 ```python
-from pke_zh.unsupervised.textrank import TextRank
+from pke_zh.textrank import TextRank
 
 m = TextRank()
 r = m.extract_sentences("较早进入中国市场的星巴克，是不少小资钟情的品牌。相比 在美国的平民形象，星巴克在中国就显得“高端”得多。用料并无差别的一杯中杯美式咖啡，在美国仅约合人民币12元，国内要卖21元，相当于贵了75%。  第一财经日报")

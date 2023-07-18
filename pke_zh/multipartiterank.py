@@ -20,7 +20,7 @@ import numpy as np
 from scipy.cluster.hierarchy import linkage, fcluster
 from scipy.spatial.distance import pdist
 
-from pke_zh.unsupervised.topicrank import TopicRank
+from pke_zh.topicrank import TopicRank
 
 
 class MultipartiteRank(TopicRank):
@@ -196,6 +196,9 @@ class MultipartiteRank(TopicRank):
 
     def extract(self, input_file_or_string, n_best=10, pos=None, threshold=0.74):
         # 1. load document
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         self.load_document(input=input_file_or_string, language='zh')
 
         # 2. clear previous graph and topics if exists
@@ -206,7 +209,8 @@ class MultipartiteRank(TopicRank):
         if pos is None:
             pos = {'n', 'a'}
         self.candidate_selection(pos=pos)
-
+        if not self.candidates:
+            return keyphrases
         # 4. build the Multipartite graph and rank candidates using random walk,
         # alpha controls the weight adjustment mechanism, see TopicRank for
         # threshold/method parameters.

@@ -18,7 +18,7 @@ occurrences into a biased PageRank. The model is described in:
 from collections import defaultdict
 import networkx as nx
 
-from pke_zh.unsupervised.singlerank import SingleRank
+from pke_zh.singlerank import SingleRank
 
 
 class PositionRank(SingleRank):
@@ -157,6 +157,9 @@ class PositionRank(SingleRank):
         self.candidate_weight_norm(w, normalized)
 
     def extract(self, input_file_or_string, n_best=10, pos=None, **kwargs):
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         # 1. valid postags
         if pos is None:
             pos = {'n', 'a'}
@@ -166,6 +169,8 @@ class PositionRank(SingleRank):
         self.load_document(input=input_file_or_string, language='zh', normalization=None)
         # 4. select the noun phrases up to 3 words as keyphrase candidates.
         self.candidate_selection(pos=pos, maximum_word_number=3)
+        if not self.candidates:
+            return keyphrases
         self.candidate_weighting(window=10, pos=pos)
         keyphrases = self.get_n_best(n=n_best)
         return keyphrases

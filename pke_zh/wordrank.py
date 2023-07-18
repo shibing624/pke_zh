@@ -19,18 +19,18 @@ from pke_zh.utils.io_utils import load_pkl, save_pkl, save_json, load_json
 from pke_zh.utils.text_utils import convert_to_unicode, is_number_string, is_alphabet_string, is_chinese_string
 from pke_zh.utils.tokenizer import word_segment
 from pke_zh.utils.file_utils import get_file
-from pke_zh.unsupervised.tfidf import TfIdf
-from pke_zh.unsupervised.textrank import TextRank
+from pke_zh.tfidf import TfIdf
+from pke_zh.textrank import TextRank
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 
 # inner data file
-default_stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
-person_name_path = os.path.join(pwd_path, '../data/person_name.txt')
-place_name_path = os.path.join(pwd_path, '../data/place_name.txt')
-common_char_path = os.path.join(pwd_path, '../data/common_char_set.txt')
-pmi_path = os.path.join(pwd_path, '../data/pmi_word_score.json')
-entropy_path = os.path.join(pwd_path, '../data/entropy_word_score.json')
+default_stopwords_path = os.path.join(pwd_path, 'data/stopwords.txt')
+person_name_path = os.path.join(pwd_path, 'data/person_name.txt')
+place_name_path = os.path.join(pwd_path, 'data/place_name.txt')
+common_char_path = os.path.join(pwd_path, 'data/common_char_set.txt')
+pmi_path = os.path.join(pwd_path, 'data/pmi_word_score.json')
+entropy_path = os.path.join(pwd_path, 'data/entropy_word_score.json')
 
 # user data dir used for supervised model
 USER_DATA_DIR = os.path.expanduser('~/.cache/pke_zh/')
@@ -625,6 +625,9 @@ class WordRank:
         :param n_best:
         :return: list of keywords
         """
+        keyphrases = []
+        if not input_string:
+            return keyphrases
         term_weights = []
         text = convert_to_unicode(input_string)
         if len(text) == 1:

@@ -363,12 +363,17 @@ class Yake(BaseKeywordExtractModel):
         return n_best
 
     def extract(self, input_file_or_string, n_best=10, threshold=0.6, window=2):
+        keyphrases = []
+        if not input_file_or_string:
+            return keyphrases
         # load the content of the document.
         self.load_document(input=input_file_or_string, language='zh', normalization=None)
         self.clear_cache()
         # select {1-3}-grams not containing punctuation marks and not
         #    beginning/ending with a stop word as candidates.
         self.candidate_selection(n=3)
+        if not self.candidates:
+            return keyphrases
         # weight the candidates using YAKE weighting scheme, a window (in
         #    words) for computing left/right contexts can be specified.
         self.candidate_weighting(window=window)

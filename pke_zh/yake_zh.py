@@ -19,7 +19,7 @@ from jieba import lcut, posseg
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 
 # inner data file
-default_stopwords_path = os.path.join(pwd_path, '../data/stopwords.txt')
+default_stopwords_path = os.path.join(pwd_path, 'data/stopwords.txt')
 jieba.setLogLevel('ERROR')
 
 
@@ -95,7 +95,8 @@ def get_S_t(content, only_cn=False, stop=None, pos_type='s', median_fn=None, tf_
     if stop is not None:
         # 停用词
         jb_lst = [w for w in jb_lst if w not in stop]
-
+    if jb_lst is None or len(jb_lst) == 0:
+        return None
     uni_lst = list(set(jb_lst))
     uni_lst.sort(key=jb_lst.index)  # 固定顺序唯一词
     split_content = re.split(r'[，；。？！]', clean_str)  # 原文本按标点拆分句子列表
@@ -165,7 +166,7 @@ def get_key_words(df_scores, n_best=10, sort_col='s_t', ascend=True, p=None):
     p = list(p)
     df_scores = df_scores[df_scores['pseg'].isin(p)]
     df_items = df_scores.sort_values(sort_col, ascending=ascend)
-    print(df_items)
+    # print(df_items)
     word_scores = zip(df_items['word'].to_list(), df_items['s_t'].to_list())
     return list(word_scores)[:n_best]
 
@@ -181,8 +182,12 @@ class YakeZH:
         self.stopwords = get_stopwords(stopwords_path)
 
     def extract(self, text, n_best=10):
+        keyphrases = []
+        if not text:
+            return keyphrases
         df = get_S_t(text, stop=self.stopwords)
-        keyphrases = get_key_words(df, n_best=n_best)
+        if df is not None:
+            keyphrases = get_key_words(df, n_best=n_best)
         return keyphrases
 
 
