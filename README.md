@@ -1,6 +1,6 @@
 # pke_zh
 [![PyPI version](https://badge.fury.io/py/pke_zh.svg)](https://badge.fury.io/py/pke_zh)
-[![Downloads](https://pepy.tech/badge/pke_zh)](https://pepy.tech/project/pke_zh)
+[![Downloads](https://static.pepy.tech/badge/pke_zh)](https://pepy.tech/project/pke_zh)
 [![GitHub contributors](https://img.shields.io/github/contributors/shibing624/pke_zh.svg)](https://github.com/shibing624/pke_zh/graphs/contributors)
 [![License Apache 2.0](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![python_vesion](https://img.shields.io/badge/Python-3.5%2B-green.svg)](requirements.txt)
