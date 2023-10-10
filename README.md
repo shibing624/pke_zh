@@ -74,7 +74,7 @@ PKE_zh, Python Keyphrase Extraction for zh(chinese).
 - 要求速度快，选择TFIDF、YAKE、PositionRank
 - 要求效果好，选择KeyBERT
 
-无监督算法介绍见文章[中文关键词提取算法](http://t.csdn.cn/6NO24)
+无监督算法介绍见文章[中文关键词提取算法](https://blog.csdn.net/mingzai624/article/details/129012015)
 
 # Install
 * From pip:
