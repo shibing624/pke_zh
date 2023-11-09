@@ -7,5 +7,5 @@ tqdm
 requests
 scikit-learn
 scipy
-networkx
+networkx<3,>=2.4
 text2vec

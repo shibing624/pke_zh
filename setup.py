@@ -51,7 +51,7 @@ setup(
         "requests",
         "scikit-learn",
         "scipy",
-        "networkx",
+        "networkx<3.0",
         "text2vec",
     ],
     packages=find_packages(exclude=['tests']),
