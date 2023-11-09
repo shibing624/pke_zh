@@ -6,7 +6,7 @@
 import sys
 
 sys.path.append("..")
-from pke_zh.wordrank import WordRank
+from pke_zh import WordRank
 
 m = WordRank()
 

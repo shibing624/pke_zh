@@ -6,7 +6,7 @@
 import sys
 
 sys.path.append("..")
-from pke_zh.textrank import TextRank
+from pke_zh import TextRank
 
 m = TextRank()
 r = m.extract_sentences(

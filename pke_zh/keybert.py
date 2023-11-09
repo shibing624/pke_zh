@@ -103,7 +103,7 @@ def mmr_ranking(
     doc_can_distances = cosine_similarity(can_embeddings, doc_embedding)
     distance_words = cosine_similarity(can_embeddings)
 
-    # Initialize candidates and already choose best keyword/keyphras
+    # Initialize candidates and already choose the best keyword/keyphras
     keywords_idx = [np.argmax(doc_can_distances)]
     candidates_idx = [i for i in range(len(can_names)) if i != keywords_idx[0]]
 

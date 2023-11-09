@@ -6,7 +6,7 @@
 import sys
 
 sys.path.append("..")
-from pke_zh.keybert import KeyBert
+from pke_zh import KeyBert
 
 m = KeyBert()
 sents = [
