@@ -94,10 +94,23 @@ output:
   - Unimportant：0级，包括语气词、代词、泛需求词、停用词等
 - 模型：默认调用训练好的WordRank模型[wordrank_model.pkl](https://github.com/shibing624/pke_zh/releases/tag/0.2.2)，模型自动下载于 `~/.cache/pke_zh/wordrank_model.pkl`
 #### 训练模型
-WordRank模型结构：
+- WordRank模型
+对输入query分词并提取多类特征，再把特征喂给GBDT等分类模型，模型区分出各词的重要性得分，挑出topK个词作为关键词。
+
+* 文本特征：包括Query长度、Term长度，Term在Query中的偏移量，term词性、长度信息、term数目、位置信息、句法依存tag、是否数字、是否英文、是否停用词、是否专名实体、是否重要行业词、embedding模长、删词差异度、以及短语生成树得到term权重等
+* 统计特征：包括PMI、IDF、TextRank值、前后词互信息、左右邻熵、独立检索占比（term单独作为query的qv/所有包含term的query的qv和）、统计概率、idf变种iqf
+* 语言模型特征：整个query的语言模型概率 / 去掉该Term后的Query的语言模型概率
+
+
+训练样本形如：
+```shell
+邪御天娇 免费 阅读,3 1 1
+```
+- 模型结构：
+
 ![term-weighting](https://github.com/shibing624/pke_zh/blob/main/docs/gbdt.png)
 
-example: [examples/train_supervised_wordrank_demo.py](examples/train_supervised_wordrank_demo.py)
+training example: [examples/train_supervised_wordrank_demo.py](examples/train_supervised_wordrank_demo.py)
 
 ### 无监督关键词提取
 支持TextRank、TfIdf、PositionRank、KeyBert等关键词提取算法。
