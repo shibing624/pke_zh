@@ -5,22 +5,23 @@
 """
 import codecs
 import os
-from loguru import logger
 import re
 from collections import Counter
-from typing import Optional
 from copy import deepcopy
+from typing import Optional
+
 import numpy as np
+from loguru import logger
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 
+from pke_zh.textrank import TextRank
+from pke_zh.tfidf import TfIdf
+from pke_zh.utils.file_utils import get_file
 from pke_zh.utils.io_utils import load_pkl, save_pkl, save_json, load_json
 from pke_zh.utils.text_utils import convert_to_unicode, is_number_string, is_alphabet_string, is_chinese_string
 from pke_zh.utils.tokenizer import word_segment
-from pke_zh.utils.file_utils import get_file
-from pke_zh.tfidf import TfIdf
-from pke_zh.textrank import TextRank
 
 pwd_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -33,7 +34,7 @@ pmi_path = os.path.join(pwd_path, 'data/pmi_word_score.json')
 entropy_path = os.path.join(pwd_path, 'data/entropy_word_score.json')
 
 # user data dir used for supervised model
-USER_DATA_DIR = os.path.expanduser('~/.cache/pke_zh/')
+USER_DATA_DIR = os.getenv("PKEZH_DATA", os.path.expanduser('~/.cache/pke_zh/'))
 os.makedirs(USER_DATA_DIR, exist_ok=True)
 # word rank model path
 default_model_path = os.path.join(USER_DATA_DIR, 'wordrank_model.pkl')
